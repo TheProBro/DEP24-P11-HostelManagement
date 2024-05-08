@@ -1,22 +1,38 @@
 import { Carousel } from "@material-tailwind/react";
 
+import image1 from "../images/Hostel/1.jpg";
+import image2 from "../images/Hostel/2.jpg";
+import image3 from "../images/Hostel/3.jpg";
+import image4 from "../images/Hostel/4.jpg";
+import image5 from "../images/Hostel/5.jpg";
+
 export default function Slider() {
   return (
     <div className="pt-3 mx-auto max-w-screen-2xl">
-      <Carousel loop={true} autoplay={true} className="rounded-xl slider">
+      <Carousel loop={true} autoplay={true} className="rounded-xl slider h-60">
         <img
-          src="https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-          alt="image 1"
+          src={image1}
+          alt="image"
           className="h-full w-full object-cover object-center"
         />
         <img
-          src="https://images.unsplash.com/photo-1432462770865-65b70566d673?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
-          alt="image 2"
+          src={image2}
+          alt="image"
           className="h-full w-full object-cover object-center"
         />
         <img
-          src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80"
-          alt="image 3"
+          src={image3}
+          alt="image"
+          className="h-full w-full object-cover object-center"
+        />
+        <img
+          src={image4}
+          alt="image"
+          className="h-full w-full object-cover object-center"
+        />
+        <img
+          src={image5}
+          alt="image"
           className="h-full w-full object-cover object-center"
         />
       </Carousel>

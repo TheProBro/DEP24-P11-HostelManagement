@@ -272,14 +272,14 @@ export default function MembersTable() {
                 </Tab>
               </TabsHeader>
             </Tabs>
-            {/* <div className="w-full md:w-max">
+            <div className="w-full md:w-max">
               <Input
                 label="Search"
                 onChange= {handleInputChange}
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 className="border border-none "
               />
-            </div> */}
+            </div>
           </div>
         </CardHeader>
         <CardBody className="px-0 mt-4 w-full overflow-x-auto">

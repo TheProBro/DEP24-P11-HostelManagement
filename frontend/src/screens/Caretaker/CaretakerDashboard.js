@@ -21,13 +21,13 @@ function CaretakerDashboard() {
         <Link to="/admin-dashboard/add-faculty" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
           Add Faculty
         </Link> */}
-        <Link to={`hostel-view/${currentUser.hostel}`} className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+        <Link to={`hostel-view/${currentUser.hostel}`} className="bg-color hover:bg-blue-800 no-underline w-25 bg-gray-700 text-white font-bold py-2 px-4 rounded">
           Rooms
         </Link>
-        <Link to="application-status" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+        <Link to="application-status" className="bg-color hover:bg-blue-800 no-underline w-25 bg-gray-700 text-white font-bold py-2 px-4 rounded">
           Applications
         </Link>
-        <Link to="complaint-status" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded my-3">
+        <Link to="complaint-status" className="bg-color hover:bg-blue-800 no-underline w-25 bg-gray-700 text-white font-bold py-2 px-4 rounded my-3">
           Complaint status
         </Link>
       </div>

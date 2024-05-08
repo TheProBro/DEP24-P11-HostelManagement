@@ -32,5 +32,7 @@ urlpatterns = [
     path('apply_saved_mapping', views.apply_saved_mapping, name='apply_saved_mapping'),
     path('check_mapping_validity', views.check_mapping_validity, name='check_mapping_validity'),
     path('add_data', views.add_data, name='add_data'),
-    path('test', views.sandbox, name='sandbox')
+    path('test', views.sandbox, name='sandbox'),
+    path('get_students', views.get_students, name='get_students'),
+    path('get_student/<int:id>', views.get_student, name='get_student'),
 ]

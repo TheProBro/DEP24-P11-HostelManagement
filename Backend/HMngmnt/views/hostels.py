@@ -7,6 +7,7 @@ from ..models import CustomUser
 from ..helpers import get_user_dict
 from ..models import Room, Application, Hostel, Student, SavedMappings, Wing, Batch, Circular
 from ..decorators import staff_required
+from ..models import Student
 
 import json
 import random
@@ -68,7 +69,7 @@ def get_hostel_rooms(request, hostel_no):
         'room_current_occupancy': room.current_occupancy,
         'floor': room.floor,
         'is_for_guests': room.is_for_guests,
-        'students': [{'name': st.student.name, 'email': st.student.email} for st in room.student_set.all()] if hasattr(room, 'student_set') else [],
+        'students': [{'name': st.student.name, 'email': st.student.email, 'phone': st.student.student_phone} for st in room.student_set.all()] if hasattr(room, 'student_set') else [],
         'guests': [{'name': st.application.student.name, 'email': st.application.student.email} for st in room.application_final_set.all()] if hasattr(room, 'application_final_set') else []
 
     } for room in rooms]
@@ -80,6 +81,7 @@ def get_hostel_rooms(request, hostel_no):
 @staff_required
 def get_hostel(req, id):
     hostel=Hostel.objects.get(hostel_no=id)
+    print('hostel:', hostel)
     hostel_serialized=json.loads(serialize('json', [hostel]))[0]
     user=req.new_param
     user=CustomUser.objects.get(pk=user.get('id'))
@@ -552,3 +554,32 @@ def circulars(request):
         return JsonResponse(circulars_list, safe=False)
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+# @admin_required
+def get_student(request, id):
+    hostel=Hostel.objects.get(hostel_no=id)
+    print(hostel)
+    students = Student.objects.select_related('student').filter(student_room__hostel__hostel_name=hostel)
+    # print(students)
+    # return JsonResponse({'message': 'List of Students'})
+
+    students_list = [
+        {
+            'student_name': student.student.name,
+            'department': student.department,
+            'student_phone': student.student_phone,
+            'student_roll': student.student_roll,
+            'student_year': student.student_year,
+            'student_room': student.student_room.room_no if student.student_room else None,
+            'student_batch': student.student_batch.batch if student.student_batch else None,
+            'student_hostel': student.student_room.hostel.hostel_name if student.student_room else None,
+            'student_hostel_wing': student.student_room.hostel_wing.wing_name if student.student_room else None,
+            'student_hostel_gender': student.student_room.hostel_wing.wing_type if student.student_room else None,
+            'student_email': student.student.email,
+        }
+        for student in students
+    ]
+
+    return JsonResponse({'message': 'List of Students', 'data': students_list})

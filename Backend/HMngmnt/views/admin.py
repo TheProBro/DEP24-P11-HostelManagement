@@ -5,8 +5,10 @@ from django.db import IntegrityError
 from ..decorators import admin_required
 from ..helpers import parse_xl, extract_roll_number_info
 from ..models import CustomUser, Faculty, Student, Batch, Room, Application
+from django.core.serializers import serialize
 
 import os
+import json
 
 @csrf_exempt
 @admin_required
@@ -108,3 +110,27 @@ def get_applications(request):
     ]
     print('application_list:', application_list)
     return JsonResponse({'message': 'Admin page', 'data': application_list})
+
+
+@csrf_exempt
+# @admin_required
+def get_students(request):
+    students = Student.objects.select_related('student').all()
+    students_list = [
+        {
+            'student_name': student.student.name,
+            'department': student.department,
+            'student_phone': student.student_phone,
+            'student_roll': student.student_roll,
+            'student_year': student.student_year,
+            'student_room': student.student_room.room_no if student.student_room else None,
+            'student_batch': student.student_batch.batch if student.student_batch else None,
+            'student_hostel': student.student_room.hostel.hostel_name if student.student_room else None,
+            'student_hostel_wing': student.student_room.hostel_wing.wing_name if student.student_room else None,
+            'student_hostel_gender': student.student_room.hostel_wing.wing_type if student.student_room else None,
+            'student_email': student.student.email,
+        }
+        for student in students
+    ]
+
+    return JsonResponse({'message': 'List of Students', 'data': students_list})
