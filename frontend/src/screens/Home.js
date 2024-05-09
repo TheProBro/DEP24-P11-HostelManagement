@@ -40,7 +40,7 @@ function Home() {
     axios
       .get(`${backendUrl}/api/circulars`, { withCredentials: true })
       .then((res) => {
-        // console.log("here:", res.data);
+        console.log("here:", res.data);
         setCirculars(res.data);
       })
       .catch((error) => {
@@ -57,7 +57,7 @@ function Home() {
   // { text: 'Circular Item 8', url: 'https://www.google.com' },
   // { text: 'Circular Item 9', url: 'https://www.google.com' },
   // { text: 'Circular Item 10', url: 'https://www.google.com' }];
-  const scrollRef = useRef();
+  // const scrollRef = useRef();
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -74,9 +74,9 @@ function Home() {
   //   return () => clearInterval(interval);
   // }, []);
 
-  // const openDeleteModal = () => {
-  //   setDeleteModalIsOpen(true);
-  // };
+  const openDeleteModal = () => {
+    setDeleteModalIsOpen(true);
+  };
 
 
   const handleCircularSelect = (id) => {
@@ -164,7 +164,7 @@ function Home() {
         </div>
         <div className='w-3/10 p-4 bg-gray-100'>
           <h2 className='text-lg font-bold mb-2'>Circulars</h2>
-          <div ref={scrollRef} className='overflow-hidden h-64 space-y-4 '>
+          <div className='overflow-hidden h-64 space-y-4 '>
             {circulars.map((circular, index) => (
               <div key={index} className='mb-1 shadow-lg p-2 transform transition-all text-left'>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2"

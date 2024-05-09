@@ -90,9 +90,9 @@ function App() {
     return <Spinner size="large" className="m-auto" />
   return (
     <section
-      className="bg-Hero bg-cover
-    font-[Poppins] md:bg-top bg-center p-0 m-0"
+      className="bg-Hero bg-cover font-[Poppins] md:bg-top bg-center flex flex-col min-h-screen"
     >
+      <div className="flex-grow">
       <Headers showPopup={showPopup} setShowPopup={setShowPopup} />
       <CommentsProvider>
       <Routes>
@@ -146,6 +146,7 @@ function App() {
 
       </Routes>
       </CommentsProvider>
+      </div>
       <Footer showPopup={showPopup} setShowPopup={setShowPopup} />
     </section>
   );

@@ -37,10 +37,13 @@ const Form = () => {
   const [file2Data, setFile2Data] = useState(null);
   const file2Ref = useRef(null);
   const handleChange = (e) => {
+    console.log(e.target.name, e.target.value);
+    console.log("1 ",formData);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    console.log("2 ",formData);
     // console.log(e.target.name, e.target.value);
   };
   const handleFileChange = (e, i) => {
@@ -72,7 +75,7 @@ const Form = () => {
     // console.log("Form submitted:", formData);
     if (
       (formData.arrivalDate > formData.departureDate ||
-        formData.arrivalDate <= new Date().toISOString().split("T")[0] ||
+        formData.arrivalDate < new Date().toISOString().split("T")[0] ||
         formData.departureDate <= new Date().toISOString().split("T")[0]) &&
       !filled
     ) {
@@ -113,6 +116,7 @@ const Form = () => {
         navigate("/internship");
       })
       .catch((err) => {
+        alert("alert")
         console.log(err);
       });
   };
@@ -122,7 +126,16 @@ const Form = () => {
         ...prevFormData,
         studentName: currentUser.name,
         email: currentUser.email,
-        // Update other fields accordingly
+        gender: currentUser.gender,
+        affiliation: currentUser.affiliation,
+        address: currentUser.address,
+        contactNumber: currentUser.contactNumber,
+        facultyEmail: currentUser.facultyEmail,
+        facultyMentorName: currentUser.facultyMentorName,
+        arrivalDate: currentUser.arrivalDate,
+        departureDate: currentUser.departureDate,
+        remarks: currentUser.remarks,
+        teamsAccepted: false,
       }));
     }
     if (filled && filled.comments) {
@@ -143,7 +156,7 @@ const Form = () => {
       )}
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-2 mt-0 pt-8 rounded bg-white lg:px-20"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-2 mt-0 pt-8 rounded bg-white lg:px-20 required"
       >
         <div className="">
           <Input
