@@ -1,7 +1,7 @@
 import { Carousel } from "@material-tailwind/react";
-import image1 from "../images/Hostel/H1.jpg";
-import image2 from "../images/Hostel/H2.jpg";
-import image3 from "../images/Hostel/H3.jpg";
+// import image1 from "../images/Hostel/H1.jpg";
+// import image2 from "../images/Hostel/H2.jpg";
+// import image3 from "../images/Hostel/H3.jpg";
 
 import image1 from "../images/Hostel/1.jpg";
 import image2 from "../images/Hostel/2.jpg";

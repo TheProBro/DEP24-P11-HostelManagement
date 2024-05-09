@@ -41,7 +41,6 @@ export default function TableWithStripedColumns() {
   const { id } = useParams();
   const variableClassName = (idx) =>
     idx <= 7 ? "border-b" : "border-b hover:cursor-pointer";
-  console.log("Application ID:", id);
   // Hardcoded field names
   const [fieldNames, setFieldNames] = useState([
     "Student Name",
@@ -77,7 +76,6 @@ export default function TableWithStripedColumns() {
   const viewPdf = ()=>{
     axios.get(`${backendUrl}/api/generate_pdf?application_id=${id}`, {withCredentials: true, responseType: 'blob'})
     .then((res)=>{
-      console.log('here')
       const file = new Blob([res.data], {type: 'application/pdf'});
       const fileURL = URL.createObjectURL(file);
       window.open(fileURL);
@@ -88,7 +86,6 @@ export default function TableWithStripedColumns() {
     axios
       .get(`${backendUrl}/api/get_application/${id}`, { withCredentials: true })
       .then((res) => {
-        console.log('here', res.data);
         setApplication({
           instiId: res.data.data.instiId,
           letter: res.data.data.letter,
@@ -107,6 +104,7 @@ export default function TableWithStripedColumns() {
         }
         // console.log("New Object:", newObj);
         setFormData(newObj);
+        console.log(newObj)
         setEmail(res.data.data.student_email);
       })
       .catch((err) => {
@@ -313,18 +311,6 @@ export default function TableWithStripedColumns() {
   <>
     <button
       className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 mr-5"
-      onClick={handlePayment}
-    >
-      Send Payment details
-    </button>
-    <NavLink
-      to={`../hostel-view/${currentUser.hostel}`}
-      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 no-underline"
-    >
-      Allot Room
-    </NavLink>
-    <button
-      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 mr-5"
       onClick={() => {
         return comments[id] ? handleSubmit() : setCommentSection(!commentSection);
       }}
@@ -346,7 +332,7 @@ export default function TableWithStripedColumns() {
     </button>
   )}
 
-{location.pathname.includes("caretaker") &&
+{(location.pathname.includes("caretaker")||location.pathname.includes('admin')) &&
   formData.status.includes("Caretaker") && (
     <button
       className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 mr-5"
@@ -356,7 +342,7 @@ export default function TableWithStripedColumns() {
     </button>
   )}
 
-{location.pathname.includes("caretaker") &&
+{(location.pathname.includes("caretaker")||location.pathname.includes('admin')) &&
   formData.status.toLowerCase().includes("payment") && (
     <NavLink
       to={`../hostel-view/${currentUser.hostel}`}
