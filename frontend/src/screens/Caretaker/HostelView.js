@@ -110,7 +110,7 @@ export default function HostelRooms() {
   const [hostelDetails, setHostelDetails] = useState({});
   const [spin, setSpin] = useState(false);
   const [rooms, setRooms] = useState([]);
-  const [selectedOption, setSelectedOption] = useState("list");
+  const [selectedOption, setSelectedOption] = useState("box");
   const [search, setSearch] = useState("");
   // console.log(hostel);
   const backendUrl = process.env.REACT_APP_BASE_URL;

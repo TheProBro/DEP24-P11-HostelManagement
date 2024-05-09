@@ -69,7 +69,7 @@ def get_hostel_rooms(request, hostel_no):
         'room_current_occupancy': room.current_occupancy,
         'floor': room.floor,
         'is_for_guests': room.is_for_guests,
-        'students': [{'name': st.student.name, 'email': st.student.email, 'phone': st.student.student_phone} for st in room.student_set.all()] if hasattr(room, 'student_set') else [],
+        'students': [{'name': st.student.name, 'email': st.student.email} for st in room.student_set.all()] if hasattr(room, 'student_set') else [],
         'guests': [{'name': st.application.student.name, 'email': st.application.student.email} for st in room.application_final_set.all()] if hasattr(room, 'application_final_set') else []
 
     } for room in rooms]

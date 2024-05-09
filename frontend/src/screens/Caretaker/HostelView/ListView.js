@@ -12,15 +12,14 @@ import {
   Button,
   CardBody,
   CardFooter,
-  Select,
-  Option,
+  Checkbox,
 } from "@material-tailwind/react";
 // import { Check } from "@material-ui/icons";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 // import { useAuth } from "../../contexts/authContext";
-const TABLE_HEAD = ["Room No", "Entry No.", "Name", "Batch", "Contact No.","Email" ,""];
+const TABLE_HEAD = ["Select","Room No", "Entry No.", "Name", "Batch", "Contact No.","Email"];
 const backendUrl = process.env.REACT_APP_BASE_URL; // Define backendUrl
 
 export default function ListView({hostel}) {
@@ -247,12 +246,26 @@ export default function ListView({hostel}) {
                   const handleApprove = () => {
                     setShowPopup(student_roll);
                   };
+                  const handleClearSelection = () => {
+                    setShowPopup(false);
+                  };
                   const rowColor = index % 2 != 0 ? 'bg-gray-50' : '';
                   return (
                     <tr
                       key={student_roll}
                       className={`hover:bg-gray-200 hover:cursor-pointer border ${rowColor}`}
                     >
+                      <td className="px-4 py-3 border-b">
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" checked/>
+                          </Typography>
+                        </div>
+                      </td>
                       <td className="px-4 py-3 border-b">
                         <div className="flex flex-col">
                           <Typography
@@ -321,34 +334,6 @@ export default function ListView({hostel}) {
                             {student_email}
                           </Typography>
                         </div>
-                      </td>
-                      <td
-                        className="p-4 border-b border-blue-gray-50 w-10"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Select variant="static" size="lg" direction="down"
-                        //   label={
-                        //     selectedOptions[application_id]?.value || "Select"
-                        //   }
-                        //   onChange={(e) => handleOption(application_id, e, status)}
-                        >
-                          <Option value="Approve" onClick={handleApprove}>
-                            Approve
-                          </Option>
-                          <Option value="Approve Faculty">
-                            Approve Faculty
-                          </Option>
-                          <Option value="Approve HOD">Approve HOD</Option>
-                          <Option value="Reject">Reject</Option>
-                        </Select>
-                        {/* <ModalComponent
-                        //   showPopup={showPopup === application_id}
-                        //   application_id={application_id}
-                        //   setShowPopup={setShowPopup}
-                        //   selectedOptions={selectedOptions}
-                        //   setSelectedOptions={setSelectedOptions}
-                        //   gender={gender}
-                        /> */}
                       </td>
                     </tr>
                   );
