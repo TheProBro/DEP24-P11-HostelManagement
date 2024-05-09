@@ -23,7 +23,7 @@ const StudentSignup = () => {
 
   const handleStudentSignup = (event) => {
     event.preventDefault();
-    console.log('Student Name:', studentName, 'Student Email:', studentEmail, 'Student Password:', studentPassword);
+    console.log('Student Name:', studentName, 'Student Email:', studentEmail.toLowerCase(), 'Student Password:', studentPassword);
     axios.post('http://localhost:8000/api/signup', {
       name: studentName,
       email: studentEmail,

@@ -88,7 +88,7 @@ const Form = () => {
     data.append("affiliation", formData.affiliation);
     data.append("address", formData.address);
     data.append("contactNumber", formData.contactNumber);
-    data.append("studentEmail", formData.email);
+    data.append("studentEmail", formData.email.toLowerCase());
     data.append("facultyMentorName", formData.facultyMentorName);
     data.append("facultyEmail", formData.facultyEmail);
     data.append("arrivalDate", formData.arrivalDate);
@@ -125,7 +125,7 @@ const Form = () => {
       setFormData((prevFormData) => ({
         ...prevFormData,
         studentName: currentUser.name,
-        email: currentUser.email,
+        email: currentUser.email.toLowerCase(),
         gender: currentUser.gender,
         affiliation: currentUser.affiliation,
         address: currentUser.address,
