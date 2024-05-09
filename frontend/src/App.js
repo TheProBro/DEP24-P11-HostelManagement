@@ -8,12 +8,14 @@ import { useAuth } from "./contexts/authContext";
 // Screens and Components
 import Home from "./screens/Home";
 import Login from "./screens/Login";
+import ResetPass from "./screens/ResetPassword"
 import AboutUs from "./screens/AboutUs";
 // import Headers from "./components/Headers";
 import Headers from "./components/Headers";
 import Contact from "./screens/Contact";
 import Test from "./screens/Test";
-import Footer from "./components/Footer";
+// import Footer from "./components/Footer";
+import Footer from "./components/Footer2";
 
 // Student Routes
 import StudentSignup from "./screens/Signup";
@@ -49,7 +51,7 @@ import Caretaker from "./screens/Caretaker/Caretaker";
 import ApplicationStatus2 from "./screens/Admin/ApplicationStatus2";
 import StudentProfile from "./screens/Students/StudentProfile";
 
-
+import { Spinner } from "@material-tailwind/react";
 
 // Landing Page
 function LandingPage(){
@@ -77,7 +79,7 @@ function LandingPage(){
     }
   }, [currentUser, loading])
   if (redirectTo) return <Navigate to={redirectTo} />;
-  return <div>Loading...</div>;
+  return <Spinner size="large" className="m-auto" />;
 }
 
 
@@ -85,7 +87,7 @@ function App() {
   const {currentUser, loading}=useAuth();
   const [showPopup, setShowPopup] = useState(false);
   if(loading)
-    return <div>Loading...</div>
+    return <Spinner size="large" className="m-auto" />
   return (
     <section
       className="bg-Hero bg-cover
@@ -99,6 +101,8 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<StudentSignup />} />
+        <Route path="/forgot-password" element={<ResetPass />} />
+        <Route path="/reset-password" element={<ResetPass />} />
         <Route path="/form" element={<Form />} />
         <Route path="/test" element={<Test />} />
         <Route path="/about" element={<AboutUs />} />

@@ -14,20 +14,20 @@ function CaretakerDashboard() {
           </p>
         </div>
       </div>
-      <div className="flex flex-col items-start space-y-4 pl-4">
+      <div className="flex flex-col items-start space-y-4 pl-4 min-h-96">
         {/* <Link to="/admin-dashboard/add-student" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
           Add Student
         </Link>
         <Link to="/admin-dashboard/add-faculty" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
           Add Faculty
         </Link> */}
-        <Link to={`hostel-view/${currentUser.hostel}`} className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+        <Link to={`hostel-view/${currentUser.hostel}`} className="no-underline w-full lg:w-56 lg:ml-10 bg-color hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
           Rooms
         </Link>
-        <Link to="application-status" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+        <Link to="application-status" className="no-underline w-full lg:w-56 lg:ml-10 bg-color hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
           Applications
         </Link>
-        <Link to="complaint-status" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded my-3">
+        <Link to="complaint-status" className="no-underline w-full lg:w-56 lg:ml-10 bg-color hover:bg-blue-800 text-white font-bold py-2 px-4 rounded my-3 mb-4">
           Complaint status
         </Link>
       </div>

@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 
+from .hostels import sandbox
+
 from ..decorators import admin_required
 from ..helpers import parse_xl, extract_roll_number_info
 from ..models import CustomUser, Faculty, Student, Batch, Room, Application
@@ -53,7 +55,7 @@ def add_users(request):
                 student.save()
         # delete file temp.xlsx
         os.remove('temp.xlsx')
-
+        sandbox("via admin boys")
         return JsonResponse({'message': 'Success'})
     else:
         name=request.POST.get('name')

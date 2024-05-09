@@ -4,23 +4,25 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate
 
 from ..models import CustomUser, Room, Hostel, Student, Wing
-from ..helpers import get_user_dict
+from ..helpers import get_user_dict, generate_otp, extra_function
 from ..decorators import validate_token, token_required
+from ..email import send, templates
 import json
 import jwt, datetime
 
 @csrf_exempt
 def index(request):
+    extra_function()
     # for student in Student.objects.all():
     #     student.student_room=None
     #     student.save()
-    wing=Wing.objects.get(wing_name='Raavi West')
-    rooms=wing.room_set.all()
-    for room in rooms:
-        print(room.room_no, ":", room.student_set.all())
-        if room.student_set.all().count():
-            for x in room.student_set.all():
-                print(x.student.name, x.student.gender)
+    # wing=Wing.objects.get(wing_name='Raavi West')
+    # rooms=wing.room_set.all()
+    # for room in rooms:
+    #     print(room.room_no, ":", room.student_set.all())
+    #     if room.student_set.all().count():
+    #         for x in room.student_set.all():
+    #             print(x.student.name, x.student.gender)
     return JsonResponse({"message":"Hello, world. You're at the HMngmnt index."})
 
 
@@ -32,26 +34,13 @@ def signup_ep(request):
         password = data.get('password')
         email = data.get('email')
         role=data.get('role')
-        # print(name, password, email)
-        # print(request.POST)
         user=CustomUser(name=name,password=password,email=email)
-        # print(user)
         user.set_password(password)
         if role=='faculty' or role=='admin':
             user.is_staff=True
-        # user=get_user_dict(user, ['email', 'name'])
-        # login(request, user)
-        # print(user.name, user.email, user.password, user.is_staff, user.is_superuser, user.is_active, user)
+
         response= JsonResponse({'message': 'Signup successful', 'data': {'email': user.email, 'name': user.name}})
         user.save()
-        # payload = {
-        #     'id': user.id,
-        #     'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
-        #     'iat': datetime.datetime.utcnow(),
-        #     'role':  "admin" if user.is_superuser else "staff" if user.is_staff else "student"
-        # }
-        # token = jwt.encode(payload, 'secret', algorithm='HS256')
-        # response.set_cookie('secret', token, expires=payload['exp'], secure=True, httponly=True)
         return response
 
 @csrf_exempt
@@ -136,3 +125,52 @@ def profile(req):
                         print(1)
                         ret['room']=application.room.room_no
         return JsonResponse({'message': 'User profile', 'data': ret})
+
+
+@csrf_exempt
+def reset_password(request):
+    if request.method=='POST':
+        body=json.loads(request.body)
+        email=body.get('email')
+        password=body.get('password')
+        try:
+            user=CustomUser.objects.get(email=email)
+            user.set_password(password)
+            user.save()
+        except:
+            return JsonResponse({'message': 'User not found'})
+        return JsonResponse({'message': 'Password reset successful'})
+    
+@csrf_exempt
+def send_otp(request):
+    if request.method=='POST':
+        body=json.loads(request.body)
+        email=body.get('email')
+        try:
+            user=CustomUser.objects.get(email=email)
+            otp=generate_otp()
+            user.otp=otp
+            user.save()
+            print(otp)
+            # template=templates[1]
+            # template['message']=template['message'].format(otp=otp)
+            # send(template, [email])
+            return JsonResponse({'message': 'OTP sent successfully'})
+        except:
+            return JsonResponse({'message': 'User not found'}, status=400)
+    return JsonResponse({'message': 'Invalid request'})
+
+@csrf_exempt
+def verify_otp(request):
+    if request.method=='POST':
+        body=json.loads(request.body)
+        email=body.get('email')
+        otp=body.get('otp')
+        try:
+            user=CustomUser.objects.get(email=email)
+            if user.otp==int(otp):
+                return JsonResponse({'message': 'OTP verified successfully'})
+            return JsonResponse({'message': 'Invalid OTP'})
+        except:
+            return JsonResponse({'message': 'User not found'})
+    return JsonResponse({'message': 'Invalid request'})

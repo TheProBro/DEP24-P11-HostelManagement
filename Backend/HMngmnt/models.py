@@ -13,6 +13,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     gender = models.CharField(max_length=100, default='Not Specified')
+    otp = models.IntegerField(default=0)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -99,6 +100,10 @@ class Room(models.Model):
         if self.hostel_wing.hostel != self.hostel:
             raise ValidationError("Hostel Wing and Hostel do not match.")
         super().save(*args, **kwargs)
+    def get_batch(self):
+        if len(self.student_set.all()):
+            return self.student_set.all()[0].student_batch
+        return None
 
 class Application_Final(models.Model):
     application= models.OneToOneField(Application, on_delete=models.CASCADE, primary_key=True, default=None)
@@ -122,11 +127,9 @@ class Student(models.Model):
     student_year = models.IntegerField(default=None)
     student_room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True, default=None)
     student_batch = models.ForeignKey(Batch, on_delete=models.CASCADE, default=None, null=True, blank=True)
-    # def save(self, *args, **kwargs):
-    #     if self.student_room is not None:
-    #         if self.student_room.current_occupancy >= self.student_room.room_occupancy:
-    #             raise ValidationError("Room occupancy is full.")
-    #     super().save(*args, **kwargs)
+    student_prev_room= models.CharField(max_length=20, default='None', null=True, blank=True)
+    def prev_room(self):
+        return Room.objects.get(room_no=self.student_prev_room)
 
     def __str__(self):
         return self.student.name

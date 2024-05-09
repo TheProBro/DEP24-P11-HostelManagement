@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ImageSlider from '../components/ImageSlider';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import Cal from '../components/Calendar';
 import '../styles/tailwind.css';
 import { useAuth } from '../contexts/authContext';

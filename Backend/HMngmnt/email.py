@@ -25,6 +25,10 @@ If you have any questions or need further assistance, please feel free to contac
 Best regards,
 Hostel Management'''
     },
+	{
+		'subject': 'Reset Password Request',
+		'message': '''OTP for resetting password is {otp}. Do not share this OTP with anyone. If you did not request this OTP, please ignore this email.'''
+	}
     
 ]
 

@@ -80,7 +80,7 @@ export default function MembersTable() {
   const [currentTab, setCurrentTab] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
   const { comments, setComments, selectedOptions, setSelectedOptions } =useComments();
-  const applicationsPerPage = 10;
+  const applicationsPerPage = 2;
   const [search, setSearch] = useState("");
   
   // Calculate index of the last application on the current page
@@ -227,7 +227,7 @@ export default function MembersTable() {
   
   
   return (
-    <div className="flex justify-center h-full mt-4 ">
+    <div className="flex justify-center min-h-96 mt-4 ">
       <Card className=" w-screen-max h-full w-full lg:w-4/5">
         <CardHeader floated={false} shadow={false} className="rounded-none mr-10">
           <div className=" flex items-center justify-between gap-8">
@@ -272,17 +272,17 @@ export default function MembersTable() {
                 </Tab>
               </TabsHeader>
             </Tabs>
-            {/* <div className="w-full md:w-max">
+            <div className="w-full md:w-max">
               <Input
                 label="Search"
                 onChange= {handleInputChange}
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 className="border border-none "
               />
-            </div> */}
+            </div>
           </div>
         </CardHeader>
-        <CardBody className="px-0 mt-4 w-full overflow-x-auto">
+        <CardBody className="px-0 mt-4 w-full overflow-x-auto min-h-96">
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>

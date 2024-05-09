@@ -19,6 +19,12 @@
     color: #365899;
 }
 
+.inputborder:focus {
+    border-color: #351ca7;
+    background-color: #365899;
+  }
+
+
 .pt-programs{
     padding-top: 0.5rem;
     padding-bottom: 100px;

@@ -4,7 +4,7 @@ from django.core.serializers import serialize
 from django.db.models.signals import post_save
 
 from ..models import CustomUser
-from ..helpers import get_user_dict
+from ..helpers import get_user_dict, group_students
 from ..models import Room, Application, Hostel, Student, SavedMappings, Wing, Batch, Circular
 from ..decorators import staff_required
 
@@ -202,7 +202,14 @@ def add_data(req):
 def sandbox(request):
     batches = Batch.objects.all()
     hostels = Hostel.objects.all()
-    gender=request.GET.get('gender')
+    if type(request)==str and request=='via admin boys':
+        SavedMappings.objects.get(name='Current Boys').delete()
+        gender='Boys'
+    elif type(request)==str and request=='via admin girls':
+        SavedMappings.objects.get(name='Current Girls').delete()
+        gender='Girls'
+    else:
+        gender=request.GET.get('gender')
     if SavedMappings.objects.filter(name=f'Current {gender}').exists():
         data=SavedMappings.objects.get(name=f'Current {gender}')
         matrix=data.mapping
@@ -457,42 +464,27 @@ def apply_saved_mapping(request):
         if v1 and v1!=v:
             filtered_data.append([b]+v1)
     # ----------create copy of current for future reference
-    SavedMappings.objects.create(name=f'X-Current {temp}',mapping=current.mapping, wing_room_capacities=current.wing_room_capacities)
+    # SavedMappings.objects.create(name=f'X-Current {temp}',mapping=current.mapping, wing_room_capacities=current.wing_room_capacities)
     # ----------clear all rooms for re-allotment
-    students=Student.objects.filter(student_room__hostel_wing__wing_name__in=hostels, student_batch__batch__in=filtered_batches)
-    for student in students:
-        student.student_room=None
-        student.save()
+    # students=Student.objects.filter(student_room__hostel_wing__wing_name__in=hostels, student_batch__batch__in=filtered_batches)
+    # for student in students:
+    #     student.student_room=None
+    #     student.save()
     # ----------update student rooms
+    wings_dict = {wing.wing_name: wing for wing in Wing.objects.filter(wing_name__in=hostels)}
+    print(wings_dict)
+    wings = [wings_dict[hostel] for hostel in hostels]
     for i in range(1, len(filtered_data)):
         batch=filtered_data[i][0]
-        array_distribution=filtered_data[i][1:]
-        gender='Male' if temp=='Boys' else 'Female'
-        students=Student.objects.filter(student_batch__batch=batch, student__gender=gender)
-        students=list(students)
-        random.shuffle(students)
-        grps=[[] for _ in range(0, len(array_distribution))]
-        total_students = len(students)
-        remaining_students = total_students
-        for j, count in enumerate(array_distribution):
-            grp_size=min(int(count), remaining_students)
-            grps[j]=students[:grp_size]
-            students=students[grp_size:]
-            remaining_students-=grp_size
-        print(grps)
-        for j, grp in enumerate(grps):
-            wing=Wing.objects.get(wing_name=filtered_data[0][j+1])
-            rooms=list(wing.room_set.filter(is_for_guests=False).order_by('floor'))
-            while len(grp):
-                for room in rooms:
-                    if room.current_occupancy==0 or (room.current_occupancy<room.room_occupancy and room.student_set.all()[0].student_batch==batch):
-                        while room.current_occupancy<room.room_occupancy and len(grp):
-                            student=grp.pop()
-                            student.student_room=room
-                            student.save()
-                            room.save()
+        student_set=[]
+        new_distribution=filtered_data[i][1:]
+        old_distribution=existing_dict[batch]
+        if sum(old_distribution)==0:
+            gender='Male' if temp=='Boys' else 'Female'
+            student_set=list(Student.objects.filter(student_batch__batch=batch, student__gender=gender))
+        group_students(new_distribution, old_distribution, student_set, Batch.objects.get(batch=batch), wings)
     # set current mapping to new mapping
-    current.mapping=filtered_data
+    current.mapping=data
     current.save()
     return JsonResponse({'message': 'Success'})
 

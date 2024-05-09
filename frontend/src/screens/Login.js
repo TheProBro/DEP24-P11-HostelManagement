@@ -29,6 +29,7 @@ const Login = () => {
                 navigate('/')
         }
         catch(err){
+            alert('Invalid credentials')
             console.log(err)
         }
     }

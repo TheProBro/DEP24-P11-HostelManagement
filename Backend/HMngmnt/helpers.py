@@ -1,9 +1,16 @@
 from django.core.serializers import serialize
+from django.db.models import F, Q
 import json
 import base64
 from .models import CustomUser, Faculty, Hostel, Student, Wing, Room, Batch, Warden, Caretaker
 import pandas as pd
 import re
+import random
+import math
+
+def generate_otp():
+    # 4 digit otp may start with 0
+    return random.randint(1000, 9999)
 
 def extract_roll_number_info(roll_number):
     pattern = r'(\d{4}|\d{2})([A-Za-z]{3})(\d{4})'
@@ -102,7 +109,7 @@ def parse_xl(file, type):
                 gender=row['Gender']
                 phone=row['Phone']
                 year = row['Year']
-                room_no = row['Room No']
+                room_no = row['Room No'] if 'Room No' in df.columns else None
                 users.append((name, email, department, gender, phone, year, room_no))
 
         return users
@@ -111,11 +118,82 @@ def parse_xl(file, type):
         return None
     
 
-def room_allocation(incoming_batch, outgoing_batch, type):
-    if type=="btech":
-        # get all hostels
-        hostels = Hostel.objects.all()
-        # keep 3rd year students constant
-        # transfer 2nd year to 4th year
-        # put 1st year in 2nd year
+def group_students(new_distribution: list, old_distribution: list, student_set, batch: Batch, wings: list[Wing]):
+    sorted_arr=list(enumerate([i-j for i, j in zip(new_distribution, old_distribution)]))
+    print("batch:", batch.batch)
+    sorted_arr.sort(key=lambda x: x[1])
+    for idx, val in sorted_arr:
+        if val<0:
+            wing=wings[idx]
+            rooms=wing.room_set.filter(current_occupancy__gt=0, student__student_batch=batch)
+            room_capacity=rooms[0].room_occupancy
+            num_of_rooms_to_vacate=math.ceil(abs(val)/room_capacity)
+            rooms=random.sample(list(rooms), num_of_rooms_to_vacate)
+            tot=-val
+            for room in rooms:
+                students=room.student_set.all()
+                for s in students:
+                    print(s.student_roll, s.student_room.room_no, s.student_prev_room)
+                    s.student_prev_room=s.student_room.room_no
+                    s.student_room=None
+                    s.save()
+                    student_set.append(s)
+                    print(student_set)
+                    tot-=1
+                    if tot==0:
+                        break
 
+            # students=Student.objects.filter(student_room__hostel_wing=wing, student_batch=batch)
+            # popped=random.sample(list(students), abs(val))
+            # student_set.extend(popped)
+            # for s in popped:
+            #     s.student_prev_room=s.student_room.room_no
+            #     s.student_room=None
+            #     s.save()
+        elif val>0:
+            wing=wings[idx]
+            print('val:',val, 'students', len(student_set))
+            students=random.sample(student_set, val)
+            student_set=[s for s in student_set if s not in students]
+            rooms_with_capacity = wing.room_set.filter(current_occupancy=0)
+            # rooms_with_capacity=rooms_with_capacity.filter( Q(student=None) | Q(student__student_batch=batch) )
+            rooms_with_capacity=list(rooms_with_capacity)
+            print("rooms:",len(rooms_with_capacity), "wing:", wing.wing_name,  "students:", len(students))
+            room_capacity=rooms_with_capacity[0].room_occupancy
+            # split students into groups of room_capacity
+            students=[students[i:min(i+room_capacity, len(students))] for i in range(0, len(students), room_capacity)]
+            for s in students:
+                room=random.choice(rooms_with_capacity)
+                for x in s:
+                    x.student_room=room
+                    x.save()
+                if room.current_occupancy==room.room_occupancy:
+                    rooms_with_capacity.remove(room)
+            # for s in students:
+            #     room=random.choice(rooms_with_capacity)
+            #     s.student_room=room
+            #     s.save()
+            #     for x in room.student_set.all():
+            #         print(x.student_batch)
+            #     if room.current_occupancy==room.room_occupancy:
+            #         rooms_with_capacity.remove(room)
+        else:
+            # mark prev as current
+            wing=wings[idx]
+            students=Student.objects.filter(student_room__hostel_wing=wing, student_batch=batch)
+            for s in students:
+                s.student_prev_room=s.student_room.room_no
+                s.save()
+
+
+
+def extra_function():
+    wing=Wing.objects.get(wing_name='Beas West')
+    rooms=wing.room_set.all()
+    print(rooms)
+    for room in rooms:
+        stds=room.student_set.all()
+        if len(stds) and stds[0].student_batch.batch=='2020B':
+            for s in stds:
+                print(room.room_no, s.student_roll)
+            # print(room.room_no, stds[1].student_roll)

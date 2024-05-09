@@ -385,10 +385,11 @@ function ProfileInfoPopover({ handleLogout, currentUser }) {
           to="/student-profile"
           variant="small"
           color="gray"
-          className="font-normal text-blue-gray-500"
+          className="font-normal text-blue-gray-500 pr-4"
         >
           View Profile
         </Link>)}
+        <Link to='/reset-password'>Change Password</Link>
         <div className="flex items-center gap-8 border-t border-blue-gray-50 pt-2">
           <Typography
             variant="small"

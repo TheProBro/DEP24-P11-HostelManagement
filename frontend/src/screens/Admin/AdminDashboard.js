@@ -12,7 +12,7 @@ function AdminDashboard() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-start space-y-4 px-4 pb-8">
+        <div className="flex flex-col items-start space-y-4 px-4 pb-8 min-h-96">
           <Link to="add-student" className="no-underline  bg-color hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded w-full lg:w-56 lg:ml-10">
             Add Student
           </Link>

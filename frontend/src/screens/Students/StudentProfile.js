@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Avatar } from '@material-tailwind/react';
 import img from '../../images/default_user.jpg';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 const StudentProfile = () => {
   const backendUrl = process.env.REACT_APP_BASE_URL;
   const [student, setStudent] = useState({
@@ -30,6 +31,8 @@ const StudentProfile = () => {
           phone: user.phone,
           roomNumber: user.room,
           hostelName: user.hostel,
+          role: user.role,
+          role2: 'Student'
         })
       }
       else if(role==='outside student'){
@@ -40,6 +43,8 @@ const StudentProfile = () => {
           phone: user.phone,
           roomNumber: user.room,
           hostelName: user.hostel,
+          role: user.role,
+          role2: 'Student Intern'
         })
       }
     })
@@ -57,7 +62,7 @@ const StudentProfile = () => {
             className="w-32 h-32 mb-4 border border-black shadow-xl rounded-md"
           />
           <h2 className="text-l md:text-xl lg:text-2xl font-semibold mb-2">{student.name}</h2>
-          <p className="text-md md:text-l lg:text-xl font-semibold mb-2">{student.entryNumber}</p>
+          <p className="text-md md:text-l lg:text-xl font-semibold mb-2">{student.role2}</p>
         </div>
 
         {/* Student Information */}
@@ -71,6 +76,11 @@ const StudentProfile = () => {
           <p className="text-gray-800 mb-4 ml-4">
             <span className="font-semibold">Phone Number:</span> {student.phone}
           </p>
+          {student.role==='outside student' && (
+            <Link to='/internship' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
+              View Application  
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -160,12 +160,24 @@ export default function TableWithStripedColumns({data, heading}) {
       axios.get(`${backendUrl}/api/check_mapping_validity?name=${heading}`, { withCredentials: true })
       .then((res) => {
         console.log(res);
+        axios.get(`${backendUrl}/api/apply_saved_mapping?name=${heading}`, { withCredentials: true })
+        .then((res) => {
+          setLoading(false);
+          alert("Allocation applied successfully!");
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.error(err);
+          alert("Error applying allocation! Please try again.");
+        })
       })
-      axios.get(`${backendUrl}/api/apply_saved_mapping?name=${heading}`, { withCredentials: true })
-      .then((res) => {
+      .catch((err) => {
+        alert("Invalid allocation! Please check the allocation and try again.");
+        console.error(err);
         setLoading(false);
-        alert("Allocation applied successfully!");
+        return
       })
+      
     }
   }
   const handleDelete = () => {
