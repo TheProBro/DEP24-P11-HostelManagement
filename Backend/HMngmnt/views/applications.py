@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from ..models import CustomUser, Faculty, Application, Application_Final, Hostel
+from ..models import CustomUser, Faculty, Application, Application_Final, Hostel, SavedMappings
 from ..decorators import staff_required, token_required
 from ..email import send, templates
 from ..helpers import handle_file_attachment
@@ -16,6 +16,8 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
 
 @csrf_exempt
 @staff_required
@@ -130,50 +132,96 @@ def send_email(request):
 @csrf_exempt
 # @staff_required
 def generate_pdf(request):
-    application_id = request.GET.get('application_id')
-    application = Application.objects.get(application_id=application_id)
+    application_id = request.GET.get('application_id') or None
+    allotments=request.GET.get('allotments') or None
+    if application_id:
+        application = Application.objects.get(application_id=application_id)
 
-    # Create a list to hold the data for the PDF
-    data = []
+        # Create a list to hold the data for the PDF
+        data = []
 
-    # Add the text fields to the data list
-    data.append(['Student Name:', application.student.name])
-    data.append(['Affiliation:', application.affiliation])
-    data.append(['Faculty:', application.faculty.faculty.name])
-    # data.append(['Status:', application.status])
-    data.append(['Address:', application.address])
-    data.append(['Arrival Date:', application.arrival])
-    data.append(['Departure Date:', application.departure])
+        # Add the text fields to the data list
+        data.append(['Student Name:', application.student.name])
+        data.append(['Affiliation:', application.affiliation])
+        data.append(['Faculty:', application.faculty.faculty.name])
+        # data.append(['Status:', application.status])
+        data.append(['Address:', application.address])
+        data.append(['Arrival Date:', application.arrival])
+        data.append(['Departure Date:', application.departure])
 
-    # Create a PDF document
-    doc = SimpleDocTemplate("./documents/datagen.pdf", pagesize=letter)
+        # Create a PDF document
+        doc = SimpleDocTemplate("./documents/datagen.pdf", pagesize=letter)
 
-    # Create a list to hold the flowables (elements) of the document
-    elements = []
+        # Create a list to hold the flowables (elements) of the document
+        elements = []
 
-    # Create a style for the text fields
-    styles = getSampleStyleSheet()
-    style = styles["Normal"]
+        # Create a style for the text fields
+        styles = getSampleStyleSheet()
+        style = styles["Normal"]
 
-    # Add the text fields to the document
-    for field in data:
-        text = f"{field[0]} {field[1]}"
-        p = Paragraph(text, style)
-        elements.append(p)
-        elements.append(Spacer(1, 12))
+        # Add the text fields to the document
+        for field in data:
+            text = f"{field[0]} {field[1]}"
+            p = Paragraph(text, style)
+            elements.append(p)
+            elements.append(Spacer(1, 12))
 
-    # Build the document and save it
-    doc.build(elements)
+        # Build the document and save it
+        doc.build(elements)
 
-    # Send the PDF file as a response to the frontend
-    with open("./documents/datagen.pdf", "rb") as f:
-        response = HttpResponse(f.read(), content_type="application/pdf")
-        response["Content-Disposition"] = "inline; filename=output.pdf"
-    
-    # delete the file
-    os.remove("./documents/datagen.pdf")
+        # Send the PDF file as a response to the frontend
+        with open("./documents/datagen.pdf", "rb") as f:
+            response = HttpResponse(f.read(), content_type="application/pdf")
+            response["Content-Disposition"] = "inline; filename=output.pdf"
+        
+        # delete the file
+        os.remove("./documents/datagen.pdf")
+        return response
+    elif allotments:
+        print(allotments)
+        # generate a sheet of current mappings
+        mp1=SavedMappings.objects.get(name=allotments)
+        # mp2=SavedMappings.objects.get(name='Current Girls')
+        workbook = Workbook()
+        worksheet = workbook.active
+        row = 1
+        col = 1
+        for data_row in mp1.mapping:
+            for cell in data_row:
+                worksheet.cell(row=row, column=col, value=cell)
+                col += 1
+            col = 1
+            row += 1
+        worksheet.cell(row=row, column=1, value="Wing Room Capacities")
+        row += 1
+        # Write each key-value pair to the Excel sheet
+        for wing, capacity in mp1.wing_room_capacities.items():
+            worksheet.cell(row=row, column=1, value=wing)
+            worksheet.cell(row=row, column=2, value=capacity)
+            row += 1
+        worksheet.cell(row=row, column=1, value="Batch Strengths")
+        row += 1
+        # Write each key-value pair to the Excel sheet
+        for batch, strength in mp1.batch_strengths.items():
+            worksheet.cell(row=row, column=1, value=batch)
+            worksheet.cell(row=row, column=2, value=strength)
+            row += 1
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="Boys_data.xlsx"'
+        workbook.save(response)
+
     return response
-    
+
+@csrf_exempt
+@token_required
+def unallocate_room(request):
+    id=request.GET.get('application_id')
+    app=Application.objects.get(application_id=id)
+    app.status='Done'
+    app_final=Application_Final.objects.get(application=app)
+    app_final.delete()
+    app.save()
+    return JsonResponse({'message': 'Room unallocated successfully'})
 
 @csrf_exempt
 @token_required

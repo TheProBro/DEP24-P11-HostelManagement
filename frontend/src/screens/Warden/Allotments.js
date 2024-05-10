@@ -3,6 +3,21 @@ import { Accordion, AccordionHeader, AccordionBody, Button } from "@material-tai
 import axios from "axios";
 import AllotmentTable from "./AllotmentTable";
 import { NavLink } from "react-router-dom";
+
+function Icon({ id, open }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      stroke="currentColor"
+      className={`${open ? "rotate-180" : ""} h-5 w-5 transition-transform`}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+    </svg>
+  );
+}
 function transformGender(genderInput) {
   // Convert the input to lowercase
   genderInput = genderInput.toLowerCase();
@@ -31,26 +46,11 @@ function transformGender(genderInput) {
   return genderOutput;
 }
 
-function Icon({ id, open }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2}
-      stroke="currentColor"
-      className={`${open ? "rotate-180" : ""} h-5 w-5 transition-transform`}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-    </svg>
-  );
-}
 
 export default function DefaultAccordion() {
-  const [open, setOpen] = useState({});
   const backendUrl = process.env.REACT_APP_BASE_URL;
+  const [open, setOpen] = useState({});
   const [accordions, setAccordions] = useState([]);
-
   const handleOpen = (id) => {
     setOpen((prevState) => ({
       ...prevState,
@@ -124,10 +124,16 @@ export default function DefaultAccordion() {
         </Accordion>
       ))}
       <button className="hover-button relative" onClick={()=>handleNew(2)}>
-      +
-      <span className="tooltip absolute bg-black text-white text-xs px-2 py-1 rounded-md bottom-full left-1/2 transform -translate-x-1/2 opacity-0 pointer-events-none transition-opacity duration-300">
-        Create a new mapping
-      </span>
+      <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="h-6 w-6"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+  </svg>
     </button>
     </div>
   );

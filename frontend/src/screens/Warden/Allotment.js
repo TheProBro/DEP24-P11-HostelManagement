@@ -33,25 +33,18 @@ export default function Allotment() {
   const [currentTab, setCurrentTab]=useState("");
   const onConnect = useCallback(
     (params) => {
-      // console.log(params, edges)
       // check if edge already exists
       if(edges.find((edge)=>edge.source===params.source && edge.target===params.target)){
         alert("The edge already exists")
         return;
       }
       const value=parseInt(prompt("Enter the number of students you want to put in hostel "));
-      // const Sourcenode=nodes.find((node)=>node.id===params.source);
-      // const Targetnode=nodes.find((node)=>node.id===params.target);
-      // console.log(Sourcenode, Targetnode)
+
       if(!value) return;
       if(isNaN(value) || value<=0){
         alert("Please enter a valid number")
         return;
       }
-      // if(Sourcenode.data.unallocated<value || Targetnode.data.unallocated<value){
-      //   alert("The number of students you want to put in the hostel is more than the unallocated students in the batch or the capacity of the hostel")
-      //   return;
-      // }
       let flag=false;
       setNodes((prev)=>prev.map((node)=>{
         if(flag) return node;

@@ -33,7 +33,7 @@ export default function ListView({hostel}) {
   const [selectedBatch, setSelectedBatch] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [runner,setRunner] = useState(0);
-
+  const [swapList, setSwapList] = useState([]);
   // Toggle Batch
   const toggleBatch = (batch) => {
     if (selectedBatch.includes(batch)) {
@@ -58,11 +58,10 @@ export default function ListView({hostel}) {
     if (search.length > 0) {
       filteredStudents = filteredStudents.filter((student) => {
         const studentName = student.student_name;
-        console.log(student);
-        if (studentName) {
-          return studentName.toLowerCase().startsWith(search.toLowerCase());
-        }
-        return false; // If studentName is undefined, filter it out
+        const room = student.student_room;
+        console.log(student.student_room);
+        return studentName.toLowerCase().startsWith(search.toLowerCase()) || room.toLowerCase().startsWith(search.toLowerCase()) || student.student_roll.startsWith(search);
+        // return false; // If studentName is undefined, filter it out
       });
     }
 
@@ -143,7 +142,8 @@ export default function ListView({hostel}) {
       return "Rejected by Admin";
     }
   };
-
+  const handleMove = (room) => {};
+  const handleSwap = (room, roll) => {};
   const handleInputChange = (e) => {
     setSearch(e.target.value);
   };
@@ -243,10 +243,6 @@ export default function ListView({hostel}) {
                   student_phone,
                   student_email,
                 },index) => {
-                  // const [id, setId]=useState(null);
-                  const handleApprove = () => {
-                    setShowPopup(student_roll);
-                  };
                   const rowColor = index % 2 != 0 ? 'bg-gray-50' : '';
                   return (
                     <tr
@@ -332,14 +328,12 @@ export default function ListView({hostel}) {
                         //   }
                         //   onChange={(e) => handleOption(application_id, e, status)}
                         >
-                          <Option value="Approve" onClick={handleApprove}>
-                            Approve
+                          <Option value="Move" onClick={handleMove(student_room)}>
+                            Move
                           </Option>
-                          <Option value="Approve Faculty">
-                            Approve Faculty
+                          <Option value="Swap" onClick={handleSwap(student_room, student_roll)}>
+                            Swap
                           </Option>
-                          <Option value="Approve HOD">Approve HOD</Option>
-                          <Option value="Reject">Reject</Option>
                         </Select>
                         {/* <ModalComponent
                         //   showPopup={showPopup === application_id}

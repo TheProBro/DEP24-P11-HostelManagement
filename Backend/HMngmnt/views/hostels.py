@@ -69,7 +69,7 @@ def get_hostel_rooms(request, hostel_no):
         'room_current_occupancy': room.current_occupancy,
         'floor': room.floor,
         'is_for_guests': room.is_for_guests,
-        'students': [{'name': st.student.name, 'email': st.student.email, 'phone': st.student.student_phone} for st in room.student_set.all()] if hasattr(room, 'student_set') else [],
+        'students': [{'name': st.student.name, 'email': st.student.email, 'phone': st.student_phone} for st in room.student_set.all()] if hasattr(room, 'student_set') else [],
         'guests': [{'name': st.application.student.name, 'email': st.application.student.email} for st in room.application_final_set.all()] if hasattr(room, 'application_final_set') else []
 
     } for room in rooms]
@@ -457,14 +457,18 @@ def apply_saved_mapping(request):
         current.mapping=create_zero_matrix(temp)
         current.save()
     existing_dict={b[0]:b[1:] for b in current.mapping}
+    print("existing_dict:", existing_dict)
     new_dict={b[0]:b[1:] for b in data}
-    filtered_batches=[batch for batch in existing_dict if existing_dict[batch]!=new_dict[batch]]
+    print("new_dict:", new_dict)
+    # filtered_batches=[batch for batch in existing_dict if existing_dict[batch]!=new_dict[batch]]
     filtered_data=[]
     filtered_data.append(data[0])
     for b, v in existing_dict.items():
-        v1=new_dict[b]
+        v1=new_dict.get(b, [0]*len(v))
         if v1 and v1!=v:
             filtered_data.append([b]+v1)
+    print("filtered_data:", filtered_data)
+    # return JsonResponse({'message': 'Success', 'data': filtered_data})
     # ----------create copy of current for future reference
     # SavedMappings.objects.create(name=f'X-Current {temp}',mapping=current.mapping, wing_room_capacities=current.wing_room_capacities)
     # ----------clear all rooms for re-allotment
@@ -474,13 +478,15 @@ def apply_saved_mapping(request):
     #     student.save()
     # ----------update student rooms
     wings_dict = {wing.wing_name: wing for wing in Wing.objects.filter(wing_name__in=hostels)}
-    print(wings_dict)
+    # print(wings_dict)
     wings = [wings_dict[hostel] for hostel in hostels]
     for i in range(1, len(filtered_data)):
         batch=filtered_data[i][0]
+        print(batch, i)
         student_set=[]
         new_distribution=filtered_data[i][1:]
         old_distribution=existing_dict[batch]
+
         if sum(old_distribution)==0:
             gender='Male' if temp=='Boys' else 'Female'
             student_set=list(Student.objects.filter(student_batch__batch=batch, student__gender=gender))
@@ -565,6 +571,7 @@ def get_student(request, id):
             'student_roll': student.student_roll,
             'student_year': student.student_year,
             'student_room': student.student_room.room_no if student.student_room else None,
+            'student_prev_room': student.student_prev_room.room_no if student.student_prev_room else None,
             'student_batch': student.student_batch.batch if student.student_batch else None,
             'student_hostel': student.student_room.hostel.hostel_name if student.student_room else None,
             'student_hostel_wing': student.student_room.hostel_wing.wing_name if student.student_room else None,

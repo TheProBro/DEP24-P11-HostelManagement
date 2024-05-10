@@ -61,14 +61,14 @@ const RoomDetails = () => {
   useEffect(() => {
     axios.get(`${backendUrl}/api/rooms/${id}`, { withCredentials: true }).then((res) => {
       console.log(res.data);
+      console.log('here', res.data);
+      setIsGuest(res.data.guest);
+      setCurrentOccupancy(res.data.current_occupancy)
+      setTotalOccupancy(res.data.room_occupancy)
       if (res.data.data.length == 0) {
         setRoom(null);
         return;
       }
-      console.log('here');
-      setIsGuest(res.data.guest);
-      setCurrentOccupancy(res.data.current_occupancy)
-      setTotalOccupancy(res.data.room_occupancy)
       setRoom({
         roomNumber: id,
         students: res.data.data.map((student) => ({

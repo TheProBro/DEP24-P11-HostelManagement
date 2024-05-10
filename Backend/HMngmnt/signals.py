@@ -38,6 +38,15 @@ def allot_room(sender, instance, **kwargs):
             raise ValidationError("Room occupancy is full.")
         room.current_occupancy = Student.objects.filter(student_room=room).count()+ Application_Final.objects.filter(room=room).count() + 1
         room.save()
+        
+@receiver(post_delete, sender=Application_Final)
+def unallot_room(sender, instance, **kwargs):
+    # When an Application_Final instance is deleted, this function will be called
+    if instance.room:
+        room = instance.room
+        # Decrease room's current occupancy
+        room.current_occupancy -= 1
+        room.save()
 
 
 @receiver(pre_save, sender=Student)

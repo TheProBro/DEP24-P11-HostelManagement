@@ -127,9 +127,7 @@ class Student(models.Model):
     student_year = models.IntegerField(default=None)
     student_room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True, default=None)
     student_batch = models.ForeignKey(Batch, on_delete=models.CASCADE, default=None, null=True, blank=True)
-    student_prev_room= models.CharField(max_length=20, default='None', null=True, blank=True)
-    def prev_room(self):
-        return Room.objects.get(room_no=self.student_prev_room)
+    student_prev_room=models.ForeignKey(Room, on_delete=models.CASCADE, related_name='previous_students', null=True, blank=True, default=None)
 
     def __str__(self):
         return self.student.name

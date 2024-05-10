@@ -27,6 +27,7 @@ urlpatterns = [
     path('allot_room', views.allot_room, name='allot_room'),
     path('send_email', views.send_email, name='send_email'),
     path('generate_pdf', views.generate_pdf, name='generate_pdf'),
+    path('unallocate_room', views.unallocate_room, name='unallocate_room'),
     path('receive_from_sandbox', views.receive_from_sandbox, name='receive_from_sandbox'),  
     path('get_saved_mappings', views.get_saved_mappings, name='get_saved_mappings'),
     path('get_saved_mapping', views.get_saved_mapping, name='get_saved_mapping'),

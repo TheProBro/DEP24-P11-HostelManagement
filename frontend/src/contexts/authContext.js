@@ -53,7 +53,7 @@ export function AuthProvider({children}) {
             setLoading(false)
         })
     }
-    const unsubscribe =async()=>{
+    useEffect(()=>{
         if(!currentUser){
             setLoading(true);
             axios.get(`${backendUrl}/api/get_user_info`, {withCredentials: true})
@@ -74,12 +74,8 @@ export function AuthProvider({children}) {
             .finally(()=>{
                 setLoading(false);
             })
-            // setLoading(false);
-        }
-    }
-    useEffect(()=>{
-        return unsubscribe;
-    }, []) 
+        } 
+    }, [currentUser]) 
     const value = {
         currentUser,
         setCurrentUser,

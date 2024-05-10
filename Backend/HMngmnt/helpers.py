@@ -134,7 +134,7 @@ def group_students(new_distribution: list, old_distribution: list, student_set, 
                 students=room.student_set.all()
                 for s in students:
                     print(s.student_roll, s.student_room.room_no, s.student_prev_room)
-                    s.student_prev_room=s.student_room.room_no
+                    s.student_prev_room=s.student_room
                     s.student_room=None
                     s.save()
                     student_set.append(s)
@@ -182,7 +182,7 @@ def group_students(new_distribution: list, old_distribution: list, student_set, 
             wing=wings[idx]
             students=Student.objects.filter(student_room__hostel_wing=wing, student_batch=batch)
             for s in students:
-                s.student_prev_room=s.student_room.room_no
+                s.student_prev_room=s.student_room
                 s.save()
 
 

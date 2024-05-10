@@ -44,6 +44,7 @@ class StudentInline(admin.TabularInline):
     model = Student
     extra = 0
     fields = ('student_roll',)
+    fk_name = 'student_room'
 class RoomAdmin(admin.ModelAdmin):
     list_display = ('room_no', 'get_students')
     inlines = [StudentInline]

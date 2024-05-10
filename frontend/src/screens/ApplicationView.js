@@ -4,6 +4,7 @@ import "../styles/tailwind.css";
 import { useParams, useLocation, NavLink } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal";
+import { Button } from "@material-tailwind/react";
 import { useComments } from "../contexts/commentsContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
@@ -80,6 +81,17 @@ export default function TableWithStripedColumns() {
       const fileURL = URL.createObjectURL(file);
       window.open(fileURL);
     })
+  }
+  const handleUnallocation = ()=>{
+    const confirm=window.confirm("Are you sure you want to unallocate this Student?")
+    if(confirm){
+      axios.get(`${backendUrl}/api/unallocate_room?application_id=${id}`, {withCredentials: true})
+      .then((res)=>{
+        console.log(res)
+        alert("Room unallocated successfully")
+        window.location.reload()
+      })
+    }
   }
   useEffect(() => {
     // Fetch application data from backend using the application ID
@@ -310,7 +322,7 @@ export default function TableWithStripedColumns() {
       {location.pathname.includes("admin") && (
   <>
     <button
-      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 mr-5"
+      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-1 mt-4"
       onClick={() => {
         return comments[id] ? handleSubmit() : setCommentSection(!commentSection);
       }}
@@ -323,7 +335,7 @@ export default function TableWithStripedColumns() {
 {location.pathname.includes("professor") &&
   (formData.status.includes("Faculty") || formData.status.includes("HOD")) && (
     <button
-      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 mr-5"
+      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-1"
       onClick={() => {
         return comments[id] ? handleSubmit() : setCommentSection(!commentSection);
       }}
@@ -344,15 +356,25 @@ export default function TableWithStripedColumns() {
 
 {(location.pathname.includes("caretaker")||location.pathname.includes('admin')) &&
   formData.status.toLowerCase().includes("payment") && (
+    <>
     <NavLink
       to={`../hostel-view/${currentUser.hostel}`}
-      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 no-underline"
-    >
+      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-1 no-underline"
+      >
       Allot Room
     </NavLink>
+    </>
+  )}
+{(location.pathname.includes("caretaker")||location.pathname.includes('admin')) &&
+  formData.status.toLowerCase().includes("alloted") && (
+    <>
+    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-1 no-underline" onClick={handleUnallocation}>
+      Unallocate Room
+    </button>
+    </>
   )}
 
-      <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-4 flex" onClick={viewPdf}>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-1 flex" onClick={viewPdf}>
         Generate PDF
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
