@@ -242,7 +242,9 @@ def get_application_status(request):
         'phone': application.phone,
         'email': application.student.email,
         'instiId': handle_file_attachment(application.instiId.path),
-        'letter': handle_file_attachment(application.letter.path)
+        'letter': handle_file_attachment(application.letter.path),
+        'payment_proof':handle_file_attachment(application.payment_proof),
+        'transaction_id':application.payment_id,
     }
     if "Rejected" in application.status:
         applicationX['comments']=application.comments

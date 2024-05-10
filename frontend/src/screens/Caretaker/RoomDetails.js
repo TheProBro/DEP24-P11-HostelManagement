@@ -61,12 +61,16 @@ const RoomDetails = () => {
   useEffect(() => {
     axios.get(`${backendUrl}/api/rooms/${id}`, { withCredentials: true }).then((res) => {
       console.log(res.data);
-      console.log('here', res.data);
+      console.log('here');
       setIsGuest(res.data.guest);
       setCurrentOccupancy(res.data.current_occupancy)
+      console.log(currentOccupancy)
+      console.log(totalOccupancy,"total")
+      console.log(isGuest,"isguest")
       setTotalOccupancy(res.data.room_occupancy)
       if (res.data.data.length == 0) {
         setRoom(null);
+        console.log("here123")
         return;
       }
       setRoom({
@@ -81,11 +85,11 @@ const RoomDetails = () => {
       });
     });
   }, [id]);
-
+  
   return (
     <div className="container mx-auto mt-8">
-      <h1 className="text-2xl font-bold mb-4">{extractHostel(id)}</h1>
-      <h1 className="text-2xl font-bold mb-4">Room Information</h1>
+      <h1 className="text-3xl font-bold mb-4">{extractHostel(id)}</h1>
+      <h1 className="text-xl font-bold mb-4">Room Information</h1>
       {room && room.students && room.students.length > 0 ? (
         <table className="min-w-full mb-4">
           <thead>
@@ -114,8 +118,7 @@ const RoomDetails = () => {
         </table>
       ) : (
         <div className="container mx-auto mt-8 mb-3 flex flex-col">
-          <h1 className="text-2xl font-bold mb-4">Room Information</h1>
-          <h2 className="text-xl">No Info Available</h2>
+          <h2 className="text-lg">No Info Available</h2>
         </div>
       )}
       {isGuest && currentOccupancy<totalOccupancy && 

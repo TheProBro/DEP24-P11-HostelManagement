@@ -38,9 +38,9 @@ function TextUpdaterNode({ data, isConnectable }) {
             Unallocated: {data.unallocated}<br/>
           </Typography>
         </CardBody>
-        <CardFooter className="pt-0 nodrag flex justify-center">
+        {/* <CardFooter className="pt-0 nodrag flex justify-center">
           <Button onClick={()=>{handleClick()} } className="py-2.5">EDIT</Button>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
     </div>
 

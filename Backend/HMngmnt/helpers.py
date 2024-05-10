@@ -19,7 +19,7 @@ def extract_roll_number_info(roll_number):
     if match:
         year = match.group(1)
         batch = match.group(2)
-        return (year + batch.lower()[2], year+batch.lower()+match.group(3))  # Concatenating year and batch
+        return (year + batch.upper()[2], year+batch.upper()+match.group(3))  # Concatenating year and batch
     else:
         return None  # Return None if the roll number doesn't match the pattern
 

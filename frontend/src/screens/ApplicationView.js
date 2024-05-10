@@ -369,7 +369,7 @@ export default function TableWithStripedColumns() {
     </>
   )}
 {(location.pathname.includes("caretaker")||location.pathname.includes('admin')) &&
-  formData.status.toLowerCase().includes("alloted") && (
+  formData.status.toLowerCase().includes("allotted") && (
     <>
     <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 my-1 no-underline" onClick={handleUnallocation}>
       Unallocate Room

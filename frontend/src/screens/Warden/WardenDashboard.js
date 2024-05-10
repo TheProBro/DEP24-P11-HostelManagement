@@ -45,7 +45,7 @@ function AdminDashboard() {
   }, [isChief]);
   return (
     <>
-      <div className="min-h-40 flex items-center justify-center -mb-1 min-h-96">
+      <div className="min-h-40 flex items-center justify-center -mb-1">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-6 text-black">
             {isChief && <span>Chief</span>} Warden Dashboard
