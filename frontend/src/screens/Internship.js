@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import Modal from "react-modal";
+import { toast } from 'react-toastify';
 
 Modal.setAppElement("#root");
 
@@ -81,7 +82,7 @@ const Internship = () => {
     // Implement upload functionality here
     // Example: Make API call to upload payment proof and transaction ID
     console.log(response);
-    alert("Payment proof and transaction ID uploaded successfully!");
+    toast.success("Payment proof and transaction ID uploaded successfully!");
     // navigate("/internship");
   })
   };

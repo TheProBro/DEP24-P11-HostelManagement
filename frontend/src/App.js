@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import {CommentsProvider} from "./contexts/commentsContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useAuth } from "./contexts/authContext";
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Screens and Components
 import Home from "./screens/Home";
@@ -93,6 +96,7 @@ function App() {
       className="bg-Hero bg-cover font-[Poppins] md:bg-top bg-center flex flex-col min-h-screen"
     >
       <div className="flex-grow">
+      <ToastContainer/>
       <Headers showPopup={showPopup} setShowPopup={setShowPopup} />
       <CommentsProvider>
       <Routes>

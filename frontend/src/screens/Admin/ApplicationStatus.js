@@ -4,6 +4,7 @@ import axios from "axios";
 import { useAuth } from "../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import { useComments } from "../../contexts/commentsContext";
+import { toast } from 'react-toastify';
 const ApplicationList = ({ applications, data, setData }) => {
   const [openDropdown, setOpenDropdown] = useState({});
   const navigate = useNavigate();  
@@ -206,9 +207,15 @@ const ApplicationStatus = () => {
     axios.post(`${backendUrl}/api/update_application`, { data }, { withCredentials: true })
     .then((res)=>{
       console.log(res.data);
-      alert("Data submitted successfully");
+      toast.success("Data submitted successfully");
       window.location.reload();
     })
+    .catch((error)=>{
+      console.log(error);
+      toast.error("An error occurred");
+    })
+
+
     console.log(comments)
     
   }

@@ -4,6 +4,7 @@ import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import { useAuth } from "../contexts/authContext";
 import "../styles/tailwind.css";
+import { toast } from 'react-toastify';
 
 const WrongIcon = ({ wrapperClass }) => (
   <div className={wrapperClass}>
@@ -83,7 +84,7 @@ export const ResetPassword = ({ email }) => {
     e.preventDefault();
     console.log(email, password, password2);
     if (password !== password2) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
     axios
@@ -93,7 +94,7 @@ export const ResetPassword = ({ email }) => {
       })
       .then((response) => {
         console.log(response);
-        alert("Password Reset Successfully");
+        toast.success("Password Reset Successfully");
       });
   };
   return (
@@ -190,7 +191,7 @@ const StudentSignup = () => {
         })
         .then((response) => {
           console.log(response);
-          alert("OTP Verified");
+          toast.success("OTP Verified");
           // navigate('/password_reset', {state: {email: studentEmail}});
           setShowPassword(true);
         });
@@ -207,7 +208,7 @@ const StudentSignup = () => {
         )
         .then((response) => {
           console.log(response);
-          alert("OTP Sent Successfully");
+          toast.success("OTP Sent Successfully");
           setShowOTP(true);
           setLoading(false);
         });

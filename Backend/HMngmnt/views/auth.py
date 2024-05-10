@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate
 
-from ..models import CustomUser, Room, Hostel, Student, Wing
+from ..models import CustomUser, Room, Hostel, Student, Wing, TempUser
 from ..helpers import get_user_dict, generate_otp, extra_function
 from ..decorators import validate_token, token_required
 from ..email import send, templates
@@ -146,16 +146,38 @@ def send_otp(request):
     if request.method=='POST':
         body=json.loads(request.body)
         email=body.get('email')
+        is_signup = body.get('is_signup', False)
         try:
-            user=CustomUser.objects.get(email=email)
-            otp=generate_otp()
-            user.otp=otp
-            user.save()
-            print(otp)
-            # template=templates[1]
-            # template['message']=template['message'].format(otp=otp)
-            # send(template, [email])
-            return JsonResponse({'message': 'OTP sent successfully'})
+            if is_signup:
+                user = CustomUser.objects.filter(email=email).exists()
+                if user:
+                    return JsonResponse({'message': 'Email already exists'}, status=400)
+                else:
+                    user2= TempUser.objects.filter(email=email).exists()
+                    if user2:
+                        user=TempUser.objects.get(email=email)
+                        otp=generate_otp()
+                        user2.otp=otp
+                        user2.save()
+                        print(otp)
+                    else:
+                        otp = generate_otp()
+                        temp_user = TempUser.objects.create(email=email, otp=otp)
+                        print(otp)
+                    # template=templates[1]
+                    # template['message']=template['message'].format(otp=otp)
+                    # send(template, [email])
+                    return JsonResponse({'message': 'OTP sent successfully'})
+            else:
+                user=CustomUser.objects.get(email=email)
+                otp=generate_otp()
+                user.otp=otp
+                user.save()
+                print(otp)
+                # template=templates[1]
+                # template['message']=template['message'].format(otp=otp)
+                # send(template, [email])
+                return JsonResponse({'message': 'OTP sent successfully'})
         except:
             return JsonResponse({'message': 'User not found'}, status=400)
     return JsonResponse({'message': 'Invalid request'})
@@ -166,11 +188,20 @@ def verify_otp(request):
         body=json.loads(request.body)
         email=body.get('email')
         otp=body.get('otp')
+        is_signup = body.get('is_signup', False)
         try:
-            user=CustomUser.objects.get(email=email)
-            if user.otp==int(otp):
-                return JsonResponse({'message': 'OTP verified successfully'})
-            return JsonResponse({'message': 'Invalid OTP'})
+            if is_signup:
+                temp_user = TempUser.objects.get(email=email)
+                if temp_user.otp == otp:
+                    temp_user.delete()  # Delete temporary user
+                    return JsonResponse({'message': 'OTP verified successfully'})
+                else:
+                    return JsonResponse({'message': 'Invalid OTP'})
+            else:
+                user=CustomUser.objects.get(email=email)
+                if user.otp==int(otp):
+                    return JsonResponse({'message': 'OTP verified successfully'})
+                return JsonResponse({'message': 'Invalid OTP'})
         except:
             return JsonResponse({'message': 'User not found'})
     return JsonResponse({'message': 'Invalid request'})

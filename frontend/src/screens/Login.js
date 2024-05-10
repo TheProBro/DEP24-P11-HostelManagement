@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import '../styles/tailwind.css';
 import { useAuth } from '../contexts/authContext';
+import { toast } from 'react-toastify';
 const Login = () => {
     
     const [email, setEmail] = useState('');
@@ -27,9 +28,11 @@ const Login = () => {
                 navigate('/caretaker')
             else
                 navigate('/')
+
+            toast.success('Login Successful');
         }
         catch(err){
-            alert('Invalid credentials')
+            toast.error('Invalid credentials');
             console.log(err)
         }
     }

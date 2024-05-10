@@ -169,3 +169,12 @@ class Circular(models.Model):
     id = models.AutoField(primary_key=True)
     text = models.CharField(max_length=200)
     url = models.CharField(max_length=200)
+
+
+class TempUser(models.Model):
+    email = models.EmailField(primary_key=True)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

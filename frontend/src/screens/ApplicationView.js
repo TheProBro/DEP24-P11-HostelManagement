@@ -8,6 +8,7 @@ import { Button } from "@material-tailwind/react";
 import { useComments } from "../contexts/commentsContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
+import { toast } from 'react-toastify';
 Modal.setAppElement("#root");
 export default function TableWithStripedColumns() {
   const location = useLocation();
@@ -71,7 +72,7 @@ export default function TableWithStripedColumns() {
     axios.get(`${backendUrl}/api/send_email?recipient=${email}&template=${0}&id=${formData.application_id}`, {withCredentials: true})
     .then((res)=>{
       console.log(res)
-      alert("Email sent successfully")
+      toast.success("Email sent successfully")
       window.location.reload()
     })
     // console.log(email)
