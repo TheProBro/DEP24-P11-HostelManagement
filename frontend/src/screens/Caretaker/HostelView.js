@@ -108,7 +108,7 @@ export default function HostelRooms() {
   const { hostel } = useParams();
   const { currentUser, loading } = useAuth();
   const [hostelDetails, setHostelDetails] = useState({});
-  const [spin, setSpin] = useState(false);
+  const [spin, setSpin] = useState(true);
   const [rooms, setRooms] = useState([]);
   const [selectedOption, setSelectedOption] = useState("box");
   const [search, setSearch] = useState("");
@@ -364,7 +364,11 @@ export default function HostelRooms() {
             </TabsBody>
           </Tabs>
         </div>
-         :<ListView hostel={hostel}/>
+         :
+         <div>
+
+           {rooms && <ListView hostel={hostel} students={rooms}/>}
+         </div>
         // :<></>
          }
       </div>

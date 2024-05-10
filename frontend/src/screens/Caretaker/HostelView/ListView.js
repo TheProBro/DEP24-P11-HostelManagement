@@ -4,6 +4,8 @@ import {
   Card,
   CardHeader,
   Input,
+  Select,
+  Option,
   Menu,
   MenuHandler,
   MenuList,
@@ -13,16 +15,20 @@ import {
   CardBody,
   CardFooter,
   Checkbox,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
 } from "@material-tailwind/react";
 // import { Check } from "@material-ui/icons";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 // import { useAuth } from "../../contexts/authContext";
-const TABLE_HEAD = ["Select","Room No", "Entry No.", "Name", "Batch", "Contact No.","Email"];
+const TABLE_HEAD = ["Room No", "Entry No.", "Name", "Batch", "Contact Info","Prev Room","Change Status"];
 const backendUrl = process.env.REACT_APP_BASE_URL; // Define backendUrl
 
-export default function ListView({hostel}) {
+export default function ListView({hostel},rooms) {
   const [currentPage, setCurrentPage] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
   const StudentsPerPage = 20;
@@ -32,7 +38,10 @@ export default function ListView({hostel}) {
   const [selectedBatch, setSelectedBatch] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [runner,setRunner] = useState(0);
-
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [studentEmail, setStudentEmail] = useState("");
+  const [open,setOpen] = useState(false);
+  console.log(rooms,"hello ji")
   // Toggle Batch
   const toggleBatch = (batch) => {
     if (selectedBatch.includes(batch)) {
@@ -72,6 +81,11 @@ export default function ListView({hostel}) {
   useEffect(() => {
     filterStudents();
   }, [selectedBatch,search]);
+
+  useEffect(()=>{
+    console.log("hello")
+    console.log(rooms);
+  }, [rooms] );
 
   // Calculate index of the last application on the current page
   const indexOfLastApplication = currentPage * StudentsPerPage;
@@ -155,6 +169,22 @@ export default function ListView({hostel}) {
     axios
       .get(`${backendUrl}/api/get_students`, { withCredentials: true })
       .then((response) => {});
+  };
+
+  // Handle Options
+  const handleOption = ( student_email,e) => {
+    // if(!isPlausible(setEvent(e), currentStatus)){}
+    // console.log(student_email,"hello");
+    if (e === "Move") {
+      setStudentEmail(student_email);
+      if(!open)
+          setOpen(true)
+    }
+    return;
+    // } else {
+    //   setSelectedOptions({ ...selectedOptions, [appId]: { value: e } });
+    // }
+    // console.log(selectedOptions);
   };
 
   return (
@@ -244,10 +274,12 @@ export default function ListView({hostel}) {
                 },index) => {
                   // const [id, setId]=useState(null);
                   const handleApprove = () => {
-                    setShowPopup(student_roll);
+                    console.log("Approve");
+                    setShowPopup(true);
+                    console.log(showPopup)
                   };
                   const handleClearSelection = () => {
-                    setShowPopup(false);
+                    // setShowPopup(false);
                   };
                   const rowColor = index % 2 != 0 ? 'bg-gray-50' : '';
                   return (
@@ -255,17 +287,6 @@ export default function ListView({hostel}) {
                       key={student_roll}
                       className={`hover:bg-gray-200 hover:cursor-pointer border ${rowColor}`}
                     >
-                      <td className="px-4 py-3 border-b">
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" checked/>
-                          </Typography>
-                        </div>
-                      </td>
                       <td className="px-4 py-3 border-b">
                         <div className="flex flex-col">
                           <Typography
@@ -318,22 +339,43 @@ export default function ListView({hostel}) {
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal"
+                            className="font-normal text-sm"
+                          >
+                            {student_email}
+                          </Typography>
+                        </div>
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-small text-sm"
                           >
                             {student_phone}
                           </Typography>
                         </div>
                       </td>
                       <td className="px-4 py-3 border-b border-blue-gray-50">
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {student_email}
-                          </Typography>
-                        </div>
+                       
+                      </td>
+                      <td
+                        className="p-4 border-b border-blue-gray-50 w-10"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Select size="md" direction="down"
+                          label={
+                            // selectedOptions[application_id]?.value || "Select"
+                            "Select"
+                          }
+                          onChange={(e) => handleOption(student_email, e)}
+                        >
+                          <Option value="Move">
+                            Move
+                          </Option>
+                          <Option value="Swap">
+                            Swap
+                          </Option>
+                         </Select>
+                         
                       </td>
                     </tr>
                   );
@@ -341,6 +383,21 @@ export default function ListView({hostel}) {
               )}
             </tbody>
           </table>
+          <Dialog open={open} className="bg-white">
+          {/* <Dialog open={showPopup}> */}
+            <DialogHeader>Its a simple dialog.</DialogHeader>
+             <DialogBody>
+              The key to more success is to have a lot of pillows. Put it this way,
+              it took me twenty five years to get these plants, twenty five years of
+              blood sweat and tears, and I&apos;m never giving up, I&apos;m just
+              getting started. I&apos;m up to something. Fan luv.
+            </DialogBody>
+            <DialogFooter>
+              <Button variant="gradient" color="green" onClick={() => { if (open) setOpen(false); }}>
+                <span>Confirm</span>
+              </Button>
+            </DialogFooter>
+          </Dialog>
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Typography variant="small" color="blue-gray" className="font-normal">

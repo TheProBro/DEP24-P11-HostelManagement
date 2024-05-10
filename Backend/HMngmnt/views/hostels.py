@@ -574,4 +574,6 @@ def get_student(request, id):
         for student in students
     ]
 
+    
+
     return JsonResponse({'message': 'List of Students', 'data': students_list})

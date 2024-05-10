@@ -231,7 +231,6 @@ def internship(request):
     student= request.POST.get('studentEmail')
     gender= request.POST.get('gender')
     correction= request.POST.get('correction')
-    print("adsfasdfihan njlansf", correction)
     if correction is not None:
         application=Application.objects.get(application_id=correction)
         print(request.POST)

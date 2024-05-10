@@ -172,6 +172,7 @@ export default function MembersTable() {
 
   const handleOption = (appId, e, currentStatus) => {
     // if(!isPlausible(setEvent(e), currentStatus)){}
+    console.log(selectedOptions[appId],"hello");
     if (e === "Reject") {
       if (!comments[appId]) {
         alert("Please add comments for rejection");
@@ -386,13 +387,16 @@ export default function MembersTable() {
                         className="p-4 border-b border-blue-gray-50 w-10"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Select variant="static" size="lg" direction="down"
+                        <Select size="md" direction="down"
                           label={
-                            selectedOptions[application_id]?.value || "Select"
+                            // selectedOptions[application_id]?.value || "Select"
+                            "Select"
                           }
+                          color="blue"
                           onChange={(e) => handleOption(application_id, e, status)}
+                          className="pl-2"
                         >
-                          <Option value="Approve" onClick={handleApprove}>
+                          <Option value="Approve" onClick={handleApprove} className="pl-2">
                             Approve
                           </Option>
                           <Option value="Approve Faculty">
