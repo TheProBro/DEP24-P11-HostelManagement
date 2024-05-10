@@ -46,6 +46,8 @@ export default function TableWithStripedColumns() {
   const [fieldNames, setFieldNames] = useState([
     "Student Name",
     "Application ID",
+    "Student Email",
+    "Student Contact Number",
     "Affiliation",
     "Faculty",
     "Status",

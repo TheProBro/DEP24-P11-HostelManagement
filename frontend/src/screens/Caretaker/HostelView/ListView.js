@@ -4,6 +4,8 @@ import {
   Card,
   CardHeader,
   Input,
+  Select,
+  Option,
   Menu,
   MenuHandler,
   MenuList,
@@ -12,18 +14,22 @@ import {
   Button,
   CardBody,
   CardFooter,
-  Select,
-  Option,
+  Checkbox,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
 } from "@material-tailwind/react";
 // import { Check } from "@material-ui/icons";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 // import { useAuth } from "../../contexts/authContext";
-const TABLE_HEAD = ["Room No", "Entry No.", "Name", "Batch", "Contact No.","Email" ,""];
+const TABLE_HEAD = ["Room No", "Entry No.", "Name", "Batch", "Contact Info","Prev Room","Change Status"];
 const backendUrl = process.env.REACT_APP_BASE_URL; // Define backendUrl
 
-export default function ListView({hostel}) {
+
+export default function ListView({hostel},rooms) {
   const [currentPage, setCurrentPage] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
   const StudentsPerPage = 20;
@@ -33,7 +39,12 @@ export default function ListView({hostel}) {
   const [selectedBatch, setSelectedBatch] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [runner,setRunner] = useState(0);
-  const [swapList, setSwapList] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [currentStudent, setCurrentStudent] = useState("");
+  const [roomNumber, setRoomNumber]=useState("")
+  const [swapStudents, setSwapStudents] = useState([]);
+  const [open,setOpen] = useState(false);
+  console.log(rooms,"hello ji")
   // Toggle Batch
   const toggleBatch = (batch) => {
     if (selectedBatch.includes(batch)) {
@@ -72,6 +83,11 @@ export default function ListView({hostel}) {
   useEffect(() => {
     filterStudents();
   }, [selectedBatch,search]);
+
+  useEffect(()=>{
+    console.log("hello")
+    console.log(rooms);
+  }, [rooms] );
 
   // Calculate index of the last application on the current page
   const indexOfLastApplication = currentPage * StudentsPerPage;
@@ -142,8 +158,6 @@ export default function ListView({hostel}) {
       return "Rejected by Admin";
     }
   };
-  const handleMove = (room) => {};
-  const handleSwap = (room, roll) => {};
   const handleInputChange = (e) => {
     setSearch(e.target.value);
   };
@@ -156,7 +170,55 @@ export default function ListView({hostel}) {
     axios
       .get(`${backendUrl}/api/get_students`, { withCredentials: true })
       .then((response) => {});
+    };
+
+  // Handle Options
+  const handleRoomNumberChange = (e)=>{
+    setRoomNumber(e.target.value)
+  }
+  const handleOption = ( std,e) => {
+    if (e === "Move") {
+      setCurrentStudent(std)
+      setOpen(true)
+    }else if(e === "Swap"){
+      console.log("Swap")
+      const lst=[...swapStudents,std]
+      setSwapStudents([...swapStudents,std])
+      if(lst.length==2){
+        console.log(lst)
+        const confirm=window.confirm(`Are you sure you want to swap ${lst[0].student_room} with ${lst[1].student_room}`)
+        if(!confirm){
+          setSwapStudents([])
+          return
+        }
+        axios.post(`${backendUrl}/api/swap_room`, {student1:lst[0].student_email,student2:lst[1].student_email}, { withCredentials: true })
+        .then((response) => {
+          console.log(response.data)
+          // setSwapStudents([])
+          window.location.reload();
+        })
+      }
+    }
+    return;
   };
+  const handleCancel=()=>{
+    setOpen(false)
+    setRoomNumber("")
+  }
+  const handleNewRoom=()=>{
+    const confirm=window.confirm(`Are you sure you want to move student from ${currentStudent.student_room} to ${roomNumber}`)
+    if(!confirm){
+      setOpen(false)
+      return
+    }
+    axios.get(`${backendUrl}/api/new_room?old=${currentStudent.student_room}&new=${roomNumber}&student=${currentStudent.student_email}`, { withCredentials: true })
+    .then((response) => {
+      console.log(response.data)
+      setOpen(false)
+      setRoomNumber("")
+      window.location.reload();
+    })
+  }
 
   return (
     <div className="flex h-full mt-4 w-screen overflow-x-auto">
@@ -243,6 +305,15 @@ export default function ListView({hostel}) {
                   student_phone,
                   student_email,
                 },index) => {
+                  // const [id, setId]=useState(null);
+                  const handleApprove = () => {
+                    console.log("Approve");
+                    setShowPopup(true);
+                    console.log(showPopup)
+                  };
+                  const handleClearSelection = () => {
+                    // setShowPopup(false);
+                  };
                   const rowColor = index % 2 != 0 ? 'bg-gray-50' : '';
                   return (
                     <tr
@@ -301,48 +372,50 @@ export default function ListView({hostel}) {
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal"
+                            className="font-normal text-sm"
+                          >
+                            {student_email}
+                          </Typography>
+                        </div>
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-small text-sm"
                           >
                             {student_phone}
                           </Typography>
                         </div>
                       </td>
                       <td className="px-4 py-3 border-b border-blue-gray-50">
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {student_email}
-                          </Typography>
-                        </div>
+                       
                       </td>
                       <td
                         className="p-4 border-b border-blue-gray-50 w-10"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Select variant="static" size="lg" direction="down"
-                        //   label={
-                        //     selectedOptions[application_id]?.value || "Select"
-                        //   }
-                        //   onChange={(e) => handleOption(application_id, e, status)}
+                        <Select size="md" direction="down"
+                          label={
+                            // selectedOptions[application_id]?.value || "Select"
+                            "Select"
+                          }
+                          onChange={(e) => handleOption({
+                            student_room,
+                            student_roll,
+                            student_name,
+                            student_batch,
+                            student_phone,
+                            student_email,
+                          }, e)}
                         >
-                          <Option value="Move" onClick={handleMove(student_room)}>
+                          <Option value="Move">
                             Move
                           </Option>
-                          <Option value="Swap" onClick={handleSwap(student_room, student_roll)}>
+                          <Option value="Swap">
                             Swap
                           </Option>
-                        </Select>
-                        {/* <ModalComponent
-                        //   showPopup={showPopup === application_id}
-                        //   application_id={application_id}
-                        //   setShowPopup={setShowPopup}
-                        //   selectedOptions={selectedOptions}
-                        //   setSelectedOptions={setSelectedOptions}
-                        //   gender={gender}
-                        /> */}
+                         </Select>
+                         
                       </td>
                     </tr>
                   );
@@ -350,6 +423,26 @@ export default function ListView({hostel}) {
               )}
             </tbody>
           </table>
+          <Dialog open={open} className="bg-white">
+            <DialogHeader>Its a simple dialog.</DialogHeader>
+             <DialogBody>
+             <Input
+                    label="Room Number"
+                    type="text"
+                    value={roomNumber}
+                    onChange={handleRoomNumberChange}
+                    className="mb-4" // Adds margin below the input
+                />
+            </DialogBody>
+            <DialogFooter>
+              <Button variant="gradient" color="green" onClick={handleNewRoom}>
+                <span>Confirm</span>
+              </Button>
+              <Button variant="gradient" color="red" onClick={handleCancel}>
+                <span>Cancel</span>
+              </Button>
+            </DialogFooter>
+          </Dialog>
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Typography variant="small" color="blue-gray" className="font-normal">

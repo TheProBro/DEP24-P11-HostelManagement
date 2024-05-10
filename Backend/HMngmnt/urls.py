@@ -39,4 +39,6 @@ urlpatterns = [
     path('test', views.sandbox, name='sandbox'),
     path('get_students', views.get_students, name='get_students'),
     path('get_student/<int:id>', views.get_student, name='get_student'),
+    path('new_room', views.new_room, name='new_room'),
+    path('swap_room', views.swap_room, name='swap_room'),
 ]

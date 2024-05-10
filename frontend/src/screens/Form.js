@@ -83,18 +83,58 @@ const Form = () => {
       return;
     }
     const data = new FormData();
+    console.log("Form Data:", formData.studentName);
+    if(!filled && formData.studentName != "" && formData.studentName != undefined)
     data.append("studentName", formData.studentName);
+    else {alert("Please enter student name");return;}
+
+    console.log("FormData.gender", formData.gender);
+    if(!filled && formData.gender!="" && formData.gender!=undefined)
     data.append("gender", formData.gender);
+    else {alert("Please select gender");return;}  
+
+    console.log("FormData.affiliation", formData.affiliation);
+
+    if(!filled && formData.affiliation!=undefined && formData.affiliation != "")
     data.append("affiliation", formData.affiliation);
+    else {alert("Please enter affiliation");return;}
+
+    if(!filled && formData.address!=undefined && formData.address != "")
     data.append("address", formData.address);
+    else {alert("Please enter address");return;}
+
+    if(!filled && formData.contactNumber!=undefined && formData.contactNumber != "")
     data.append("contactNumber", formData.contactNumber);
+    else {alert("Please enter contact number");return;}
+
+    if(!filled && formData.email!=undefined && formData.email != "")
     data.append("studentEmail", formData.email);
+    else {alert("Please enter email");return;}
+
+    if(!filled && formData.facultyMentorName!=undefined && formData.facultyMentorName != "")
     data.append("facultyMentorName", formData.facultyMentorName);
+    else {alert("Please enter faculty mentor name");return;}
+
+    if(!filled && formData.facultyEmail!=undefined && formData.facultyEmail != "")
     data.append("facultyEmail", formData.facultyEmail);
+    else {alert("Please enter faculty email");return;}
+
+    if(!filled && formData.arrivalDate!=undefined && formData.arrivalDate != "")
     data.append("arrivalDate", formData.arrivalDate);
+    else {alert("Please select arrival date");return;}
+
+    if(!filled && formData.departureDate!=undefined && formData.departureDate != "")
     data.append("departureDate", formData.departureDate);
+    else {alert("Please select departure date");return;}
+
+    if(!filled && file1Data != null)
     data.append("instituteID", file1Data);
+    else {alert("Please upload Institute ID");return;}
+
+    if(!filled && file2Data != null)
     data.append("instituteLetter", file2Data);
+    else {alert("Please upload Institute Letter");return;}
+
     data.append("remarks", formData.remarks);
     if (filled) {
       data.append("correction", filled.application_id);
@@ -125,7 +165,7 @@ const Form = () => {
       setFormData((prevFormData) => ({
         ...prevFormData,
         studentName: currentUser.name,
-        email: currentUser.email,
+        email: currentUser.email.toLowerCase(),
         gender: currentUser.gender,
         affiliation: currentUser.affiliation,
         address: currentUser.address,

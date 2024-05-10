@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 from django.db.models.signals import post_save
+from django.db.models import F
 
 from ..models import CustomUser
 from ..helpers import get_user_dict, group_students
@@ -557,28 +558,84 @@ def circulars(request):
 @csrf_exempt
 # @admin_required
 def get_student(request, id):
-    hostel=Hostel.objects.get(hostel_no=id)
-    print(hostel)
-    students = Student.objects.select_related('student').filter(student_room__hostel__hostel_name=hostel)
-    # print(students)
-    # return JsonResponse({'message': 'List of Students'})
+    if request.method == 'GET':
+        hostel=Hostel.objects.get(hostel_no=id)
+        print(hostel)
+        students = Student.objects.select_related('student').filter(student_room__hostel=hostel)
+        # print(students)
+        # return JsonResponse({'message': 'List of Students'})
 
-    students_list = [
-        {
-            'student_name': student.student.name,
-            'department': student.department,
-            'student_phone': student.student_phone,
-            'student_roll': student.student_roll,
-            'student_year': student.student_year,
-            'student_room': student.student_room.room_no if student.student_room else None,
-            'student_prev_room': student.student_prev_room.room_no if student.student_prev_room else None,
-            'student_batch': student.student_batch.batch if student.student_batch else None,
-            'student_hostel': student.student_room.hostel.hostel_name if student.student_room else None,
-            'student_hostel_wing': student.student_room.hostel_wing.wing_name if student.student_room else None,
-            'student_hostel_gender': student.student_room.hostel_wing.wing_type if student.student_room else None,
-            'student_email': student.student.email,
-        }
-        for student in students
-    ]
+        students_list = [
+            {
+                'student_name': student.student.name,
+                'department': student.department,
+                'student_phone': student.student_phone,
+                'student_roll': student.student_roll,
+                'student_year': student.student_year,
+                'student_room': student.student_room.room_no if student.student_room else None,
+                'student_prev_room': student.student_prev_room.room_no if student.student_prev_room else None,
+                'student_batch': student.student_batch.batch if student.student_batch else None,
+                'student_hostel': student.student_room.hostel.hostel_name if student.student_room else None,
+                'student_hostel_wing': student.student_room.hostel_wing.wing_name if student.student_room else None,
+                'student_hostel_gender': student.student_room.hostel_wing.wing_type if student.student_room else None,
+                'student_email': student.student.email,
+            }
+            for student in students
+        ]
+        return JsonResponse({'message': 'List of Students', 'data': students_list})
+    elif request.method=='POST':
+        hostel=Hostel.objects.get(hostel_no=id)
+        body=json.loads(request.body)
+        batch=body.get('student_batch', None)
+        email=body.get('student_email', None)
+        user=CustomUser.objects.get(email=email)
+        gender='Boys' if user.gender=='Male' else 'Girls'
+        rooms=Room.objects.filter(hostel_wing__wing_type=gender, room_occupancy__gt=F('current_occupancy'))
+        print(rooms)
 
-    return JsonResponse({'message': 'List of Students', 'data': students_list})
+
+@csrf_exempt
+@staff_required
+def new_room(request):
+    try:
+        old_room=request.GET.get('old')
+        new_room=request.GET.get('new')
+        email=request.GET.get('student')
+        
+        # print(old_room, new_room, email)
+        student=Student.objects.get(student__email=email)
+        if student.student_room.room_no.lower()==old_room.lower():
+            room=Room.objects.get(room_no=new_room)
+            if room.room_no == old_room:
+                return JsonResponse({'error': 'Invalid request'}, status=400)
+            student.student_room=room
+            student.save()
+            return JsonResponse({'message': 'Room changed successfully'})
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+    except Exception as e:
+        print(e)
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+@csrf_exempt
+@staff_required
+def swap_room(request):
+    try:
+        body=json.loads(request.body)
+        student1=Student.objects.get(student__email=body['student1'])
+        student2=Student.objects.get(student__email=body['student2'])
+        room1=student1.student_room
+        room2=student2.student_room
+        if room1.current_occupancy<room1.room_occupancy+1 and room2.current_occupancy<room2.room_occupancy+1:
+            room1.current_occupancy-=1
+            room1.save()
+            room2.current_occupancy-=1
+            room2.save()
+
+            student1.student_room=room2
+            student2.student_room=room1
+            student2.save()
+            student1.save()
+        return JsonResponse({'message': 'Room swapped successfully'})
+    except Exception as e:
+        print(e)
+        return JsonResponse({'error': 'Invalid request'}, status=400)

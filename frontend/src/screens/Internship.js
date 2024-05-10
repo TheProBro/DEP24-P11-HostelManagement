@@ -32,7 +32,8 @@ const Internship = () => {
               setApplication(null);
             }else{
               setApplication(data.data.data);
-              // console.log(data.data.data);
+
+              console.log(data.data.data.payment_proof,"hello");
               if (data.data.data.status.includes("Rejected")) {
                 setEditButton(true);
               }
@@ -46,7 +47,7 @@ const Internship = () => {
         console.error("Error fetching application status:", error);
       }
     };
-
+    // console.log(application);
     currentUser && fetchApplicationStatus();
   }, []);
 
@@ -106,6 +107,14 @@ const Internship = () => {
               <tr className="border-b border-black">
                 <th className="border-r border-black px-2 py-1">Student Name:</th>
                 <td className="px-2 py-1">{application.student}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <th className="border-r border-black px-2 py-1">Student Email:</th>
+                <td className="px-2 py-1">{application.email}</td>
+              </tr>
+              <tr className="border-b border-black">
+                <th className="border-r border-black px-2 py-1">Student Contact No.:</th>
+                <td className="px-2 py-1">{application.phone}</td>
               </tr>
               <tr className="border-b border-black">
                 <th className="border-r border-black px-2 py-1">Faculty:</th>

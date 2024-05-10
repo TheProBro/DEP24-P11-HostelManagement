@@ -24,7 +24,7 @@ function ProfessorDashboard() {
         <Link to="/admin-dashboard/add-faculty" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
           Add Faculty
         </Link> */}
-        <Link to="application-status" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+        <Link to="application-status" className="no-underline w-25 bg-color hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
           Application Status
         </Link>
         {currentUser.roles.includes('chief warden')&&(<Link to="complaint-status" className="no-underline w-25 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">

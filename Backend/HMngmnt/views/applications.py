@@ -239,6 +239,8 @@ def get_application_status(request):
         'address': application.address,
         'arrival': application.arrival,
         'departure': application.departure,
+        'phone': application.phone,
+        'email': application.student.email,
         'instiId': handle_file_attachment(application.instiId.path),
         'letter': handle_file_attachment(application.letter.path)
     }
@@ -257,6 +259,7 @@ def get_application(request, id):
         'affiliation': application.affiliation,
         'faculty': application.faculty.faculty.name,
         'status': application.status,
+        'student_contact_number': application.phone,
         'address': application.address,
         'arrival_date': application.arrival,
         'departure_date': application.departure,
@@ -281,7 +284,7 @@ def internship(request):
         print(request.POST)
         for key, val in request.POST.items():
             print(key, val)
-            if key=='correction' or key=='studentName' or key=='studentEmail':
+            if key=='correction' or key=='studentName' or key=='studentEmail' or val=='undefined':
                 continue
             if val:
                 if key=='gender':
@@ -330,6 +333,7 @@ def internship(request):
         instiId= request.FILES.get('instituteID'),
         letter= request.FILES.get('instituteLetter'),
     )
+    print("hello")
     #update gender in user
     user=CustomUser.objects.get(email=student)
     user.gender=gender

@@ -11,7 +11,7 @@ const Login = () => {
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Email:', email, 'Password:', password);
+        console.log('Email:', email.toLowerCase(), 'Password:', password);
         try{
             const resp = await login(email, password);
             // console.log('in login: ', resp.data)
