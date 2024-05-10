@@ -14,6 +14,7 @@ const StudentSignup = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const isSignup=true;
+  const backendUrl = process.env.REACT_APP_BASE_URL;
 
   const handleStudentNameChange = (event) => {
     setStudentName(event.target.value);
@@ -38,7 +39,7 @@ const StudentSignup = () => {
       // OTP verification stage
       setLoading(true);
       try {
-        const response = await axios.post('http://localhost:8000/api/verify_otp', {
+        const response = await axios.post(`${backendUrl}/api/verify_otp`, {
           email: studentEmail,
           otp,
           is_signup: isSignup,
@@ -59,7 +60,7 @@ const StudentSignup = () => {
       setLoading(true);
       try {
         const response = await axios.post(
-          'http://localhost:8000/api/send_otp',
+          `${backendUrl}/api/send_otp`,
           {
             email: studentEmail,
             is_signup: isSignup,
@@ -81,7 +82,7 @@ const StudentSignup = () => {
 
   const handleActualSignup = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/signup', {
+      const response = await axios.post(`${backendUrl}/api/signup`, {
         name: studentName,
         email: studentEmail,
         password: studentPassword,
