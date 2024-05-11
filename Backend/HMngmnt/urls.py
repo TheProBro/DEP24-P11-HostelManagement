@@ -41,4 +41,5 @@ urlpatterns = [
     path('get_student/<int:id>', views.get_student, name='get_student'),
     path('new_room', views.new_room, name='new_room'),
     path('swap_room', views.swap_room, name='swap_room'),
+    path('new_batch', views.new_batch, name='new_batch')
 ]

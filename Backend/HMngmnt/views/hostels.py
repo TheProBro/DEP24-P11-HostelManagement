@@ -6,7 +6,7 @@ from django.db.models import F
 
 from ..models import CustomUser
 from ..helpers import get_user_dict, group_students
-from ..models import Room, Application, Hostel, Student, SavedMappings, Wing, Batch, Circular
+from ..models import Room, Application, Hostel, Student, SavedMappings, Wing, Batch, Circular, Application_Final
 from ..decorators import staff_required
 from ..models import Student
 
@@ -562,6 +562,7 @@ def get_student(request, id):
         hostel=Hostel.objects.get(hostel_no=id)
         print(hostel)
         students = Student.objects.select_related('student').filter(student_room__hostel=hostel)
+        applications=Application_Final.objects.filter(hostel=hostel)
         # print(students)
         # return JsonResponse({'message': 'List of Students'})
 
@@ -581,6 +582,23 @@ def get_student(request, id):
                 'student_email': student.student.email,
             }
             for student in students
+        ]
+        students_list2=[
+            {
+                'student_name': application.application.student.name,
+                'department': 'intern',
+                'student_phone': application.application.phone,
+                'student_roll': application.application.application_id,
+                'student_year': 'None',
+                'student_room': application.room.room_no if application.room else 'None',
+                'student_prev_room': 'None',
+                'student_batch': 'None',
+                'student_hostel': application.room.hostel.hostel_name if application.room else None,
+                'student_hostel_wing': application.room.hostel_wing.wing_name if application.room else None,
+                'student_hostel_gender': application.room.hostel_wing.wing_type if application.room else None,
+                'student_email': application.application.student.email,
+            }
+            for application in applications
         ]
         return JsonResponse({'message': 'List of Students', 'data': students_list})
     elif request.method=='POST':
@@ -635,6 +653,24 @@ def swap_room(request):
             student2.student_room=room1
             student2.save()
             student1.save()
+        return JsonResponse({'message': 'Room swapped successfully'})
+    except Exception as e:
+        print(e)
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+
+@csrf_exempt
+@staff_required
+def new_batch(request):
+    try:
+        old_batch=request.GET.get('old')
+        new_batch=request.GET.get('new')
+        print(new_batch)
+        new_batch=Batch.objects.get(batch=new_batch)
+        email=request.GET.get('student')
+        student=Student.objects.get(student__email=email)
+        student.student_batch=new_batch
+        student.save()
         return JsonResponse({'message': 'Room swapped successfully'})
     except Exception as e:
         print(e)

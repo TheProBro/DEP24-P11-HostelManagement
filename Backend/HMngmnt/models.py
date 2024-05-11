@@ -24,6 +24,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
         return self
 
+class TempUser(models.Model):
+    email = models.EmailField(_("email address"), primary_key=True)
+    otp=models.CharField(max_length=10, default=None, null=True)
+    
+
 class Faculty(models.Model):
     faculty= models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, default=None)
     department = models.CharField(max_length=100)

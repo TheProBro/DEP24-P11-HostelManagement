@@ -39,12 +39,14 @@ export default function ListView({hostel},rooms) {
   const [selectedBatch, setSelectedBatch] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [runner,setRunner] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState({});
+  // const [selectedOptions, setSelectedOptions] = useState({});
   const [currentStudent, setCurrentStudent] = useState("");
   const [roomNumber, setRoomNumber]=useState("")
+  const [newBatch, setNewBatch]=useState("")
   const [swapStudents, setSwapStudents] = useState([]);
   const [open,setOpen] = useState(false);
-  console.log(rooms,"hello ji")
+  const [open2,setOpen2] = useState(false);
+  // console.log(rooms,"hello ji")
   // Toggle Batch
   const toggleBatch = (batch) => {
     if (selectedBatch.includes(batch)) {
@@ -176,7 +178,11 @@ export default function ListView({hostel},rooms) {
   const handleRoomNumberChange = (e)=>{
     setRoomNumber(e.target.value)
   }
+  const handleBatchChange = (e)=>{
+    setNewBatch(e.target.value)
+  }
   const handleOption = ( std,e) => {
+    console.log(e)
     if (e === "Move") {
       setCurrentStudent(std)
       setOpen(true)
@@ -198,20 +204,48 @@ export default function ListView({hostel},rooms) {
           window.location.reload();
         })
       }
+    }else if(e==="Change Batch"){
+      setCurrentStudent(std)
+      setOpen2(true)
     }
     return;
   };
   const handleCancel=()=>{
     setOpen(false)
+    // setOpen2(false)
     setRoomNumber("")
+    // setNewBatch("")
   }
+  const handleCancel2=()=>{
+    // setOpen(false)
+    setOpen2(false)
+    // setRoomNumber("")
+    setNewBatch("")
+  }
+ 
   const handleNewRoom=()=>{
     const confirm=window.confirm(`Are you sure you want to move student from ${currentStudent.student_room} to ${roomNumber}`)
     if(!confirm){
       setOpen(false)
+      setRoomNumber("")
       return
     }
     axios.get(`${backendUrl}/api/new_room?old=${currentStudent.student_room}&new=${roomNumber}&student=${currentStudent.student_email}`, { withCredentials: true })
+    .then((response) => {
+      console.log(response.data)
+      setOpen(false)
+      setRoomNumber("")
+      window.location.reload();
+    })
+  }
+  const handleNewBatch=()=>{
+    const confirm=window.confirm(`Are you sure you want to move student from ${currentStudent.student_batch} to ${newBatch}`)
+    if(!confirm){
+      setOpen2(false)
+      setNewBatch("")
+      return
+    }
+    axios.get(`${backendUrl}/api/new_batch?old=${currentStudent.student_batch}&new=${newBatch}&student=${currentStudent.student_email}`, { withCredentials: true })
     .then((response) => {
       console.log(response.data)
       setOpen(false)
@@ -304,6 +338,7 @@ export default function ListView({hostel},rooms) {
                   student_batch,
                   student_phone,
                   student_email,
+                  student_prev_room
                 },index) => {
                   // const [id, setId]=useState(null);
                   const handleApprove = () => {
@@ -388,7 +423,7 @@ export default function ListView({hostel},rooms) {
                         </div>
                       </td>
                       <td className="px-4 py-3 border-b border-blue-gray-50">
-                       
+                       {student_prev_room}
                       </td>
                       <td
                         className="p-4 border-b border-blue-gray-50 w-10"
@@ -414,6 +449,9 @@ export default function ListView({hostel},rooms) {
                           <Option value="Swap">
                             Swap
                           </Option>
+                          <Option value="Change Batch">
+                            Change Batch
+                          </Option>
                          </Select>
                          
                       </td>
@@ -424,7 +462,7 @@ export default function ListView({hostel},rooms) {
             </tbody>
           </table>
           <Dialog open={open} className="bg-white">
-            <DialogHeader>Its a simple dialog.</DialogHeader>
+            <DialogHeader>Change Room</DialogHeader>
              <DialogBody>
              <Input
                     label="Room Number"
@@ -439,6 +477,26 @@ export default function ListView({hostel},rooms) {
                 <span>Confirm</span>
               </Button>
               <Button variant="gradient" color="red" onClick={handleCancel}>
+                <span>Cancel</span>
+              </Button>
+            </DialogFooter>
+          </Dialog>
+          <Dialog open={open2} className="bg-white">
+            <DialogHeader>Change Batch</DialogHeader>
+             <DialogBody>
+             <Input
+                    label="Batch"
+                    type="text"
+                    value={newBatch}
+                    onChange={handleBatchChange}
+                    className="mb-4" // Adds margin below the input
+                />
+            </DialogBody>
+            <DialogFooter>
+              <Button variant="gradient" color="green" onClick={handleNewBatch}>
+                <span>Confirm</span>
+              </Button>
+              <Button variant="gradient" color="red" onClick={handleCancel2}>
                 <span>Cancel</span>
               </Button>
             </DialogFooter>
