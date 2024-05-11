@@ -138,6 +138,7 @@ export default function Allotment() {
   // useEffect for current Tab
   useEffect(()=>{
     // setNodes(...nodes)
+    // console.log(data,"hello")
     setNodes((prev)=>{
       return prev.map((node)=>{
         // console.log(node)
@@ -367,9 +368,9 @@ export default function Allotment() {
     <>
     <Tabs value="html" className="pb-0 mb-0">
       <TabsHeader>
-        {data.map(({ label, value }) => (
+        {data.map(({ label, value,unallocated }) => (
           <Tab key={value} value={value} onClick={()=>{setCurrentTab(value)}}>
-            {label}
+            <span className={`${unallocated && ("bg-yellow-200 py-0.5 px-1 rounded-lg")}`}>{unallocated >0 && '*'}{label}</span>
           </Tab>
         ))}
         <Button onClick={Opendialoge} className="z-10 w-2/5 py-0 px-2">Add Batch</Button>

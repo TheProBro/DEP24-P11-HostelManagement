@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import Modal from "react-modal";
+import { toast } from 'react-toastify';
 
 Modal.setAppElement("#root");
 
@@ -11,6 +12,7 @@ const Internship = () => {
   const [application, setApplication] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalIsOpen2, setModalIsOpen2] = useState(false);
+  const [modalIsOpen3, setModalIsOpen3] = useState(false);
   const [editButton, setEditButton] = useState(false);
   const [paymentProof, setPaymentProof] = useState("");
   const [transactionId, setTransactionId] = useState("");
@@ -32,8 +34,8 @@ const Internship = () => {
               setApplication(null);
             }else{
               setApplication(data.data.data);
-
-              console.log(data.data.data.payment_proof,"hello");
+              // console.log()
+              console.log(data.data.data,"hello");
               if (data.data.data.status.includes("Rejected")) {
                 setEditButton(true);
               }
@@ -81,7 +83,7 @@ const Internship = () => {
     // Implement upload functionality here
     // Example: Make API call to upload payment proof and transaction ID
     console.log(response);
-    alert("Payment proof and transaction ID uploaded successfully!");
+    toast.success("Payment proof and transaction ID uploaded successfully!");
     // navigate("/internship");
   })
   };
@@ -124,6 +126,7 @@ const Internship = () => {
                 <th className="border-r border-black px-2 py-1">Status:</th>
                 <td className="px-2 py-1">
                   {application.status}
+                  <span>{application.status==="Room Allotted"&& ", Check you profile page for Room Number"}</span>
                   {application.status && application.status.includes("Rejected") && " - Edit your application!"}
                 </td>
               </tr>
@@ -224,7 +227,7 @@ const Internship = () => {
                 </Modal>
               </tr>
               {/* Add conditional rendering for Payment Proof and Transaction ID */}
-              {application.status === "Pending Payment" && (
+              {(application.status === "Pending Payment") && (
                 <>
                   <tr className="border-b border-black">
                     <th className="border-r border-black px-2 py-1">
@@ -249,6 +252,62 @@ const Internship = () => {
                         className="bg-white border border-black p-1"
                         onChange={handleTransactionIdChange} // Add onChange handler
                       />
+                    </td>
+                  </tr>
+                </>
+              )}
+              {(application.status === "Room Allotted"|| application.status === "Done" ) && (
+                <>
+                  <tr className="border-b border-black">
+                    <th className="border-r border-black px-2 py-1">
+                      Uploaded Payment Proof:
+                    </th>
+                    <td className="px-2 py-1 hover:cursor-pointer text-blue-500">
+                  <span
+                    className="underline hover:text-blue-700"
+                    onClick={() => {
+                      setModalIsOpen3(true);
+                    }}
+                  >
+                    View PDF
+                  </span>
+                </td>
+                <Modal
+                  isOpen={modalIsOpen3}
+                  onRequestClose={() => setModalIsOpen3(false)}
+                  contentLabel="Institute Letter"
+                  className="h-full flex flex-col justify-center items-center bg-transparent"
+                >
+                  <iframe
+                    title="Institute Letter"
+                    src={`data:application/pdf;base64,${application.payment_proof}`}
+                    width="80%"
+                    height="80%"
+                  />
+                  <div className="md:hidden">
+                    <a
+                      href={`data:application/pdf;base64,${application.payment_proof}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline text-blue-500 hover:text-blue-800"
+                    >
+                      Open in New Tab
+                    </a>
+                  </div>
+                  <button
+                    onClick={() => setModalIsOpen3(false)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 no-underline mt-2"
+                  >
+                    Close
+                  </button>
+                </Modal>
+                  </tr>
+                  <tr className="border-b border-black">
+                    <th className="border-r border-black px-2 py-1">
+                      Transaction ID:
+                    </th>
+                    <td className="px-2 py-1">
+                      {application.transaction_id}
                     </td>
                   </tr>
                 </>

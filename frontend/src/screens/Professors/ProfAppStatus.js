@@ -1,5 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect, useMemo } from "react";
+import { toast } from 'react-toastify';
 import {
   Card,
   CardHeader,
@@ -123,6 +124,10 @@ export default function MembersTable() {
         console.log(res.data);
         alert("Data submitted successfully");
         window.location.reload();
+      })
+      .catch((error)=>{
+        console.log(error);
+        toast.error("An error occurred");
       });
   };
   return (

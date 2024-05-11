@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 import {
   Navbar,
   Collapse,
@@ -236,10 +237,12 @@ export default function Headers() {
   const handleLogout = async () => {
     try {
       console.log("inside handleLogout");
-      logout().then(()=>navigate("/"));
-      // navigate("/");
+      await logout();
+      toast.success('Logout Successful'); // Display a success toast message
+      navigate("/");
     } catch (err) {
       console.log(err);
+      toast.error('Logout Failed');
     }
     navigate("/home");
   };

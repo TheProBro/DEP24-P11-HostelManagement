@@ -25,8 +25,11 @@ function AdminDashboard() {
           <Link to="/warden" className="no-underline  bg-color hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded w-full lg:w-56 lg:ml-10">
             Warden's Dashboard
           </Link>
-          <Link to="complaint-status" className="no-underline  bg-color hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded w-full lg:w-56 lg:ml-10">
+          {/* <Link to="complaint-status" className="no-underline  bg-color hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded w-full lg:w-56 lg:ml-10">
             Complaint Status
+          </Link> */}
+          <Link to="view-students" className="no-underline  bg-color hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded w-full lg:w-56 lg:ml-10">
+            View Students
           </Link>
         </div>
       </>

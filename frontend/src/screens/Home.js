@@ -153,9 +153,9 @@ function Home() {
           <div className='w-full p-4 mb-200'>
             {/* Content for the 70% width side */}
             <div className='h-96 w-full relative'>
-              <p>
+              {/* <p>
                 lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget nunc
-              </p>
+              </p> */}
             </div>
           </div>
 

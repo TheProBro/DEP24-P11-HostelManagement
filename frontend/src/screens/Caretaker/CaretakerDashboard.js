@@ -27,9 +27,9 @@ function CaretakerDashboard() {
         <Link to="application-status" className="bg-color hover:bg-blue-800 no-underline w-25 bg-gray-700 text-white font-bold py-2 px-4 rounded">
           Applications
         </Link>
-        <Link to="complaint-status" className="bg-color hover:bg-blue-800 no-underline w-25 bg-gray-700 text-white font-bold py-2 px-4 rounded my-3">
+        {/* <Link to="complaint-status" className="bg-color hover:bg-blue-800 no-underline w-25 bg-gray-700 text-white font-bold py-2 px-4 rounded my-3">
           Complaint status
-        </Link>
+        </Link> */}
       </div>
     </>
   );

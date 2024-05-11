@@ -45,7 +45,7 @@ function AdminDashboard() {
   }, [isChief]);
   return (
     <>
-      <div className="min-h-40 flex items-center justify-center -mb-1 min-h-96">
+      <div className="min-h-40 flex items-center justify-center -mb-1">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-6 text-black">
             {isChief && <span>Chief</span>} Warden Dashboard
@@ -64,12 +64,12 @@ function AdminDashboard() {
           >
             Allocation Students
           </Link>)}
-          <Link
+          {/* <Link
             to="complaint-status"
             className="no-underline  bg-color hover:bg-blue-800 text-white font-MEDIUM py-2 px-4 rounded w-full lg:w-72 lg:ml-10"
           >
             Complaint Status
-          </Link>
+          </Link> */}
         </div>
         <div className="flex flex-col items-start space-y-4 px-4 pb-8">
           {hostels &&

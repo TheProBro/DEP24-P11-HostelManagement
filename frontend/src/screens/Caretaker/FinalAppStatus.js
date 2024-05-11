@@ -3,6 +3,7 @@ import "../../styles/tailwind.css";
 import axios from "axios";
 import { useAuth } from "../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 const ApplicationList = ({ applications, data, setData, idx }) => {
   const [openDropdown, setOpenDropdown] = useState({});
   const navigate = useNavigate();
@@ -197,6 +198,10 @@ const ApplicationStatus = () => {
         alert("Data updated successfully");
         // trigger reload
         window.location.reload();
+      })
+      .catch((error)=>{
+        console.log(error);
+        toast.error("An error occurred");
       });
   };
   return (
