@@ -164,9 +164,9 @@ def send_otp(request):
                         otp = generate_otp()
                         temp_user = TempUser.objects.create(email=email, otp=otp)
                         print(otp)
-                    # template=templates[1]
-                    # template['message']=template['message'].format(otp=otp)
-                    # send(template, [email])
+                    template=templates[1]
+                    template['message']=template['message'].format(otp=otp)
+                    send(template, [email])
                     return JsonResponse({'message': 'OTP sent successfully'})
             else:
                 user=CustomUser.objects.get(email=email)
@@ -174,9 +174,9 @@ def send_otp(request):
                 user.otp=otp
                 user.save()
                 print(otp)
-                # template=templates[1]
-                # template['message']=template['message'].format(otp=otp)
-                # send(template, [email])
+                template=templates[1]
+                template['message']=template['message'].format(otp=otp)
+                send(template, [email])
                 return JsonResponse({'message': 'OTP sent successfully'})
         except:
             return JsonResponse({'message': 'User not found'}, status=400)
