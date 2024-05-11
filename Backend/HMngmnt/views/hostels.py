@@ -556,14 +556,13 @@ def circulars(request):
 
 
 @csrf_exempt
-# @admin_required
+# @staff_required
 def get_student(request, id):
     if request.method == 'GET':
         hostel=Hostel.objects.get(hostel_no=id)
-        print(hostel)
         students = Student.objects.select_related('student').filter(student_room__hostel=hostel)
         applications=Application_Final.objects.filter(hostel=hostel)
-        # print(students)
+        print(students)
         # return JsonResponse({'message': 'List of Students'})
 
         students_list = [
@@ -600,16 +599,17 @@ def get_student(request, id):
             }
             for application in applications
         ]
+        print(hostel)
         return JsonResponse({'message': 'List of Students', 'data': students_list})
-    elif request.method=='POST':
-        hostel=Hostel.objects.get(hostel_no=id)
-        body=json.loads(request.body)
-        batch=body.get('student_batch', None)
-        email=body.get('student_email', None)
-        user=CustomUser.objects.get(email=email)
-        gender='Boys' if user.gender=='Male' else 'Girls'
-        rooms=Room.objects.filter(hostel_wing__wing_type=gender, room_occupancy__gt=F('current_occupancy'))
-        print(rooms)
+    # elif request.method=='POST':
+    #     hostel=Hostel.objects.get(hostel_no=id)
+    #     body=json.loads(request.body)
+    #     batch=body.get('student_batch', None)
+    #     email=body.get('student_email', None)
+    #     user=CustomUser.objects.get(email=email)
+    #     gender='Boys' if user.gender=='Male' else 'Girls'
+    #     rooms=Room.objects.filter(hostel_wing__wing_type=gender, room_occupancy__gt=F('current_occupancy'))
+    #     print(rooms)
 
 
 @csrf_exempt

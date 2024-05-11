@@ -148,6 +148,7 @@ function App() {
           <Route path="sandbox/:name/:gender?" element={<Allotment />} />
           <Route path="hostel-view/:hostel" element={<HostelView />} />
           <Route path="room-details/:id" element={<RoomDetails />} />
+          <Route path="view-students" element={<ViewAllStudents />}/>
         </Route>
 
       </Routes>

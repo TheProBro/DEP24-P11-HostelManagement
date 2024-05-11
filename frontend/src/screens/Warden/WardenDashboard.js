@@ -58,12 +58,19 @@ function AdminDashboard() {
       </div>
       <div className="flex flex-row justify-around px-4 pb-8">
         <div className="flex flex-col items-start space-y-4 px-4 pb-8">
-          {isChief && (<Link
+          {isChief && (
+          <>
+          <Link
             to="allotments"
             className="no-underline  bg-color hover:bg-blue-800 text-white font-medium py-2 px-4 rounded w-full lg:w-72 lg:ml-10"
-          >
+            >
             Allocation Students
-          </Link>)}
+          </Link>
+          <Link to="view-students" className="no-underline  bg-color hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded w-full lg:w-56 lg:ml-10">
+            View Students
+          </Link>
+            </>
+        )}
           {/* <Link
             to="complaint-status"
             className="no-underline  bg-color hover:bg-blue-800 text-white font-MEDIUM py-2 px-4 rounded w-full lg:w-72 lg:ml-10"

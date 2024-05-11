@@ -249,7 +249,8 @@ export default function HostelRooms() {
     const filteredRooms = rooms.filter((room) => {
       const floorNumber = parseInt(room.room_no.match(/\d+$/)[0]);
       // console.log("filtered", floorNumber.toString()[0] - "0", active);
-      return floorNumber.toString()[0] - "0" === active && room.is_for_guests;
+      // return floorNumber.toString()[0] - "0" === active && room.is_for_guests;
+      return room.is_for_guests
     });
 
     const getItemProps = (index) => ({
@@ -367,7 +368,7 @@ export default function HostelRooms() {
          :
          <div>
 
-           {rooms && <ListView hostel={hostel} students={rooms}/>}
+           {<ListView hostel={hostel} students={rooms}/>}
          </div>
         // :<></>
          }

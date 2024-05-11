@@ -178,8 +178,7 @@ class Circular(models.Model):
 
 class TempUser(models.Model):
     email = models.EmailField(primary_key=True)
-    otp = models.CharField(max_length=6)
-    created_at = models.DateTimeField(auto_now_add=True)
+    otp = models.CharField(max_length=6, default=None, null=True, blank=True)
 
     def __str__(self):
         return self.email

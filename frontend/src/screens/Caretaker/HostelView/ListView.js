@@ -138,7 +138,7 @@ export default function ListView({hostel},rooms) {
         setCount(countTemp)
         setBatch(uniqueBatch);
         console.log(student)
-        console.log("hklasdhfjla")
+        // console.log("hklasdhfjla")
         // filterStudents(temp);
         setFilteredStudents(temp);
         setRunner(1);
