@@ -32,6 +32,7 @@ import AdminDashboard from "./screens/Admin/AdminDashboard";
 import AddStudents from "./screens/Admin/AddStudents";
 import AddFaculty from "./screens/Admin/AddFaculty";
 import ComplaintStatus from "./screens/ComplaintStatus";
+import ViewAllStudents from "./screens/Admin/ViewAllStudents"
 
 //Warden Routes
 import Warden from "./screens/Warden/Warden";
@@ -120,6 +121,7 @@ function App() {
           {/* <Route path="application-status-2" element={<ApplicationStatus2 />} /> */}
           <Route path="complaint-status" element={<ComplaintStatus />} />
           <Route path="application-status/application/:id" element={<ApplicationView />}/>
+          <Route path="view-students" element={<ViewAllStudents />}/>
         </Route>
         {/* Professor Routes includes wardens */}
         <Route path="/professor/*" element={<Professor />}>
