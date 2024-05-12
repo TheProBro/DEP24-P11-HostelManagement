@@ -2,6 +2,7 @@
 /Backend/__pycache__/
 db.sqlite3
 /documents/
-/HMngmnt/migrations/
+# /HMngmnt/migrations/
+/HMngmnt/migrations/__pycache__/
 /v1/
 /HMngmnt/views/__pycache__

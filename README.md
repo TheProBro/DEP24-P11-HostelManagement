@@ -28,8 +28,14 @@ To run the DEP.Hostel.Management project, follow these steps:
     ```bash
     pip install -r requirements.txt
     ```
+3. Start the database and create superuser
+    ```bash
+    python3 manage.py makemigrations
+    python3 manage.py migrate
+    python3 manage.py createsuperuser
+    ```
 
-3. Start the Django development server:
+4. Start the Django development server:
 
     ```bash
     python3 manage.py runserver
