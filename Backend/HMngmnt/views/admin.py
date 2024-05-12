@@ -11,6 +11,7 @@ from django.core.serializers import serialize
 
 import os
 import json
+import time
 
 @csrf_exempt
 @admin_required
@@ -42,22 +43,25 @@ def add_users(request):
                 user=CustomUser(name=userX[0], email=userX[1], gender=userX[3])
                 user.set_password('devanshu')
                 user.is_active=True
-                try:
-                    user.save()
-                except:
-                    pass
                 batch, roll=extract_roll_number_info(userX[1])
-            
+                
                 batch, is_created=Batch.objects.get_or_create(batch=batch)
                 try:
                     room=Room.objects.get(room_no=userX[6])
                 except:
                     room=None
                 student=Student(student=user, department=userX[2], student_phone=userX[4], student_roll=roll, student_year=userX[5], student_room=room, student_batch=batch)
-                student.save()
+                try:
+                    user.save()
+                    time.sleep(0.1)
+                    student.save()
+                    time.sleep(0.1)
+                except:
+                    return JsonResponse({'message': 'Success'}, status=404)
         # delete file temp.xlsx
         os.remove('temp.xlsx')
         sandbox("via admin boys")
+        sandbox("via admin girls")
         return JsonResponse({'message': 'Success'})
     else:
         name=request.POST.get('name')

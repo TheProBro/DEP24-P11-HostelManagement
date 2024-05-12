@@ -1,3 +1,4 @@
+import time
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
@@ -206,10 +207,12 @@ def sandbox(request):
     batches = Batch.objects.all()
     hostels = Hostel.objects.all()
     if type(request)==str and request=='via admin boys':
-        SavedMappings.objects.get(name='Current Boys').delete()
+        if SavedMappings.objects.filter(name='Current Boys').exists():
+            SavedMappings.objects.get(name='Current Boys').delete()
         gender='Boys'
     elif type(request)==str and request=='via admin girls':
-        SavedMappings.objects.get(name='Current Girls').delete()
+        if SavedMappings.objects.filter(name='Current Girls').exists():
+            SavedMappings.objects.get(name='Current Girls').delete()
         gender='Girls'
     else:
         gender=request.GET.get('gender')
@@ -643,16 +646,17 @@ def swap_room(request):
         student2=Student.objects.get(student__email=body['student2'])
         room1=student1.student_room
         room2=student2.student_room
+        # pre_save.disconnect(Student, )
         if room1.current_occupancy<room1.room_occupancy+1 and room2.current_occupancy<room2.room_occupancy+1:
             room1.current_occupancy-=1
             room1.save()
             room2.current_occupancy-=1
             room2.save()
-
+            time.sleep(2)
             student1.student_room=room2
             student2.student_room=room1
-            student2.save()
             student1.save()
+            student2.save()
         return JsonResponse({'message': 'Room swapped successfully'})
     except Exception as e:
         print(e)

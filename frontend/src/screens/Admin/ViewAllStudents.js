@@ -95,7 +95,7 @@ export default function ViewAllStudents() {
         const studentName = student.student_name;
         console.log(student);
         if (studentName) {
-          return studentName.toLowerCase().startsWith(search.toLowerCase());
+          return studentName.toLowerCase().startsWith(search.toLowerCase())||student.student_roll.toLowerCase().startsWith(search.toLowerCase());
         }
         return false; // If studentName is undefined, filter it out
       });

@@ -1,3 +1,4 @@
+import time
 from django.core.serializers import serialize
 from django.db.models import F, Q
 import json
@@ -137,6 +138,7 @@ def group_students(new_distribution: list, old_distribution: list, student_set, 
                     s.student_prev_room=s.student_room
                     s.student_room=None
                     s.save()
+                    time.sleep(0.05)
                     student_set.append(s)
                     print(student_set)
                     tot-=1
@@ -167,6 +169,7 @@ def group_students(new_distribution: list, old_distribution: list, student_set, 
                 for x in s:
                     x.student_room=room
                     x.save()
+                    time.sleep(0.03)
                 if room.current_occupancy==room.room_occupancy:
                     rooms_with_capacity.remove(room)
             # for s in students:

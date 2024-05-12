@@ -3,7 +3,7 @@ import { Typography } from "@material-tailwind/react";
 export default function FooterWithLogo() {
   return (
     <footer className="w-full p-8 bg-color">
-      <div className="flex flex-row flex-wrap items-center justify-center gap-y-6 gap-x-12 bg-color text-center md:justify-between">
+      <div className="flex flex-row flex-wrap items-center justify-center gap-y-6 gap-x-12 bg-color text-center md:justify-between md:mx-20">
         <span className="text-white text-left">
             <div className="text-lg font-semibold">
             Chief Warden
@@ -15,6 +15,17 @@ export default function FooterWithLogo() {
         </span>
         
         <ul className="flex flex-wrap items-center gap-y-2 gap-x-8">
+        <li>
+          <Typography
+            as="a"
+            href="https://www.iitrpr.ac.in/"
+            target="_blank"
+            color="white"
+            className="font-normal transition-colors hover:text-blue-500 focus:text-blue-500"
+          >
+            IIT Ropar Website
+          </Typography>
+        </li>
           <li>
             <Typography
               as="a"

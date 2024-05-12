@@ -1,6 +1,5 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect, useMemo } from "react";
-import { toast } from 'react-toastify';
 import {
   Card,
   CardHeader,
@@ -81,7 +80,7 @@ export default function MembersTable() {
   const [currentTab, setCurrentTab] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
   const { comments, setComments, selectedOptions, setSelectedOptions } =useComments();
-  const applicationsPerPage = 2;
+  const applicationsPerPage = 10;
   const [search, setSearch] = useState("");
   
   // Calculate index of the last application on the current page
@@ -173,7 +172,6 @@ export default function MembersTable() {
 
   const handleOption = (appId, e, currentStatus) => {
     // if(!isPlausible(setEvent(e), currentStatus)){}
-    console.log(selectedOptions[appId],"hello");
     if (e === "Reject") {
       if (!comments[appId]) {
         alert("Please add comments for rejection");
@@ -222,18 +220,14 @@ export default function MembersTable() {
       )
       .then((res) => {
         // console.log(res.data);
-        toast.success("Data submitted successfully");
+        alert("Data submitted successfully");
         window.location.reload();
-      })
-      .catch((error)=>{
-        console.log(error);
-        toast.error("An error occurred");
       });
   };
   
   
   return (
-    <div className="flex justify-center min-h-96 mt-4 ">
+    <div className="flex justify-center h-full mt-4 ">
       <Card className=" w-screen-max h-full w-full lg:w-4/5">
         <CardHeader floated={false} shadow={false} className="rounded-none mr-10">
           <div className=" flex items-center justify-between gap-8">
@@ -278,17 +272,17 @@ export default function MembersTable() {
                 </Tab>
               </TabsHeader>
             </Tabs>
-            <div className="w-full md:w-max">
+            {/* <div className="w-full md:w-max">
               <Input
                 label="Search"
                 onChange= {handleInputChange}
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 className="border border-none "
               />
-            </div>
+            </div> */}
           </div>
         </CardHeader>
-        <CardBody className="px-0 mt-4 w-full overflow-x-auto min-h-96">
+        <CardBody className="px-0 mt-4 w-full overflow-x-auto">
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
@@ -392,16 +386,13 @@ export default function MembersTable() {
                         className="p-4 border-b border-blue-gray-50 w-10"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Select size="md" direction="down"
+                        <Select variant="static" size="lg" direction="down"
                           label={
-                            // selectedOptions[application_id]?.value || "Select"
-                            "Select"
+                            selectedOptions[application_id]?.value || "Select"
                           }
-                          color="blue"
                           onChange={(e) => handleOption(application_id, e, status)}
-                          className="pl-2"
                         >
-                          <Option value="Approve" onClick={handleApprove} className="pl-2">
+                          <Option value="Approve" onClick={handleApprove}>
                             Approve
                           </Option>
                           <Option value="Approve Faculty">

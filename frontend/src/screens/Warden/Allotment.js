@@ -329,7 +329,9 @@ export default function Allotment() {
         room_capacities[node.id]=node.data.per_room_capacity
       }
     })
-    
+    if(!save_name){
+      return
+    }
     const batch_strengths={}
     const batches=[]
     nodes.forEach(node=>{

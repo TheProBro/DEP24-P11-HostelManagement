@@ -1,19 +1,35 @@
 # DEP.Hostel.Management
 
+## OS Used
+
+Development done on **Windows OS** 
+ 
 ## Running the Project
 
 To run the DEP.Hostel.Management project, follow these steps:
 
 ### Backend Setup
-
-1. Make sure all Python dependencies are installed using pip:
-
+1. Create Virtual Environment and Activate it
     ```bash
     cd Backend
+    python -m venv v1
+    ```
+    Activation for windows
+    ```
+    ./v1/Scripts/activate
+    ```
+    Activation for Linux
+    ```
+    source v1/bin/activate
+    ```
+
+2. Make sure all Python dependencies are installed using pip:
+
+    ```bash
     pip install -r requirements.txt
     ```
 
-2. Start the Django development server:
+3. Start the Django development server:
 
     ```bash
     python3 manage.py runserver
@@ -47,5 +63,3 @@ To run the DEP.Hostel.Management project, follow these steps:
 
 Now, you should be able to access the DEP.Hostel.Management project by visiting `http://localhost:3000` in your web browser.
 
-
- 
