@@ -1,4 +1,4 @@
-# DEP.Hostel.Management
+# DEP24-P11-HostelManagement
 
 ## OS Used
 
@@ -6,7 +6,7 @@ Development done on **Windows OS**
  
 ## Running the Project
 
-To run the DEP.Hostel.Management project, follow these steps:
+To run the DEP24-P11-HostelManagement project, follow these steps:
 
 ### Backend Setup
 1. Create Virtual Environment and Activate it
@@ -67,5 +67,5 @@ To run the DEP.Hostel.Management project, follow these steps:
 
    The frontend development server will run at `http://localhost:3000` by default.
 
-Now, you should be able to access the DEP.Hostel.Management project by visiting `http://localhost:3000` in your web browser.
+Now, you should be able to access the DEP24-P11-HostelManagement project by visiting `http://localhost:3000` in your web browser.
 

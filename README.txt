@@ -1,4 +1,4 @@
-DEP.Hostel.Management
+DEP24-P11-HostelManagement
 
 OS Used
     Development done on Windows OS
@@ -7,36 +7,43 @@ Running the Project
 To run the DEP.Hostel.Management project, follow these steps:
 
 Backend Setup
-    Create Virtual Environment and Activate it
+    Create Virtual Environment and Activate it:
 
-    cd Backend
-    python -m venv v1
-    Activation for windows
+        cd Backend
+        python -m venv v1
+    
+    Activation for windows:
+        ./v1/Scripts/activate
 
-    ./v1/Scripts/activate
-    Activation for Linux
+    Activation for Linux:
+        source v1/bin/activate
 
-    source v1/bin/activate
     Make sure all Python dependencies are installed using pip:
 
-    pip install -r requirements.txt
-    Start the Django development server:
+        pip install -r requirements.txt
 
-    python3 manage.py runserver
+    Start the database and create superuser:
+        python3 manage.py makemigrations
+        python3 manage.py migrate
+        python3 manage.py createsuperuser
+
+    Start the Django development server:
+        python3 manage.py runserver
+
     The backend server will run at http://localhost:8000 by default.
 
 Frontend Setup
     Open a new terminal.
 
     Navigate to the frontend directory:
+        cd frontend
 
-    cd frontend
     Install Node.js dependencies using npm:
+        npm install
 
-    npm install
     Start the frontend development server:
+        npm start
 
-    npm start
     The frontend development server will run at http://localhost:3000 by default.
 
-    Now, you should be able to access the DEP.Hostel.Management project by visiting http://localhost:3000 in your web browser.
+    Now, you should be able to access the DEP24-P11-HostelManagement project by visiting http://localhost:3000 in your web browser.
